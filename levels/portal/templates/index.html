@@ -1,0 +1,16 @@
+<html>
+    <head>
+    <title>Stripe-CTF2 workshop</title>
+    </head>
+    <body>
+        Viel Spaß beim Passwort-Klau<br/>
+        Getrennte Umgebungen:
+        <ul>
+        {% for env in environments %}
+
+        <li><a href="/{{env.number}}">User {{env.number}}</a></li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
+

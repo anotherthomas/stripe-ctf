@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "express": "",
-    "sqlite3": "2.1.5",
+    "sqlite3": "2.1.18",
     "mu2": ""
   },
   "devDependencies": {}
