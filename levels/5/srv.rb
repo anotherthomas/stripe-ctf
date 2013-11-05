@@ -113,10 +113,12 @@ EOF
 end
 
 def main
-  DomainAuthenticator::DomainAuthenticatorSrv.run!
+  DomainAuthenticator::DomainAuthenticatorSrv.run!({port:port})
+
 end
 
 if $0 == __FILE__
-  main
+      main(ARGV[0])
+
   exit(0)
 end

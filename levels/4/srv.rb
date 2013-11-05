@@ -234,12 +234,13 @@ module KarmaTrader
   end
 end
 
-def main
+def main(port)
   KarmaTrader::DB.init
-  KarmaTrader::KarmaSrv.run!
+  KarmaTrader::KarmaSrv.run!({port:port})
+
 end
 
 if $0 == __FILE__
-  main
+  main(ARGV[0])
   exit(0)
 end

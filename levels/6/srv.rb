@@ -258,10 +258,11 @@ end
 
 def main
   Streamer::DB.init
-  Streamer::StreamerSrv.run!
+  Streamer::StreamerSrv.run!({port:port})
+
 end
 
 if $0 == __FILE__
-  main
+      main(ARGV[0])
   exit(0)
 end

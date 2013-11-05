@@ -101,4 +101,5 @@ def login():
 
 if __name__ == '__main__':
     # In development: app.run(debug=True)
-    app.run()
+    import sys
+    app.run(port=int(sys.argv[1]))
