@@ -236,7 +236,7 @@ end
 
 def main(port)
   KarmaTrader::DB.init
-  KarmaTrader::KarmaSrv.run!({port:port})
+  KarmaTrader::KarmaSrv.run!({"port" => port})
 
 end
 

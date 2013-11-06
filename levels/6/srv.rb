@@ -256,9 +256,9 @@ machine, for example, can only talk directly to the Streamer server itself!",
   end
 end
 
-def main
+def main(port)
   Streamer::DB.init
-  Streamer::StreamerSrv.run!({port:port})
+  Streamer::StreamerSrv.run!({"port" => port})
 
 end
 

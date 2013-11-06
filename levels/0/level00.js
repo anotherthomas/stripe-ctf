@@ -57,9 +57,9 @@ app.post('/*', function(req, res) {
 });
 
 if (process.argv.length > 2) {
-  var socket = process.argv[2];
-  console.log("Starting server on UNIX socket " + socket);
-  app.listen(socket);
+  var port = process.argv[2];
+  console.log("Starting server on port " + port);
+  app.listen(port);
 } else {
   console.log("Starting server at http://localhost:3000/");
   app.listen(3000);

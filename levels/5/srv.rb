@@ -112,8 +112,8 @@ EOF
   end
 end
 
-def main
-  DomainAuthenticator::DomainAuthenticatorSrv.run!({port:port})
+def main(port)
+  DomainAuthenticator::DomainAuthenticatorSrv.run!({"port" => port})
 
 end
 
