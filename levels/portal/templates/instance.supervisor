@@ -1,0 +1,43 @@
+[program:0-0]
+directory=/opt/ctf/i0/0
+command=node level00.js
+autostart=True
+autorestart=True
+
+[program:0-3]
+directory=/opt/ctf/i0/3
+command=/opt/ctf/i0/3/3/bin/python secretvault.py 3003
+autostart=True
+autorestart=True
+
+[program:0-4]
+directory=/opt/ctf/i0/4
+command=/opt/ctf/i0/4/srv.rb 8004
+autostart=True
+autorestart=True
+
+[program:0-5]
+directory=/opt/ctf/i0/5
+command=/opt/ctf/i0/5/srv.rb 8005
+autostart=True
+autorestart=True
+
+[program:0-6]
+directory=/opt/ctf/i0/6
+command=/opt/ctf/i0/6/srv.rb 8006
+autostart=True
+autorestart=True
+
+[program:0-7]
+directory=/opt/ctf/i0/7
+command=/opt/ctf/i0/7/7/bin/python wafflecopter.py 3007
+autostart=True
+autorestart=True
+
+[program:0-8]
+directory=/opt/ctf/i0/8
+env=PATH='$PATH:.'
+command=/opt/ctf/i0/8/8/bin/python password_db_launcher 123456789012 127.0.0.1:3008
+autostart=True
+autorestart=True
+
