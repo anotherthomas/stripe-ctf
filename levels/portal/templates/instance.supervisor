@@ -1,43 +1,47 @@
-[program:0-0]
+{% set proxyport = baseport + 50*instance +20 %}
+
+
+[program:{{instance}}-0]
 directory=/opt/ctf/i0/0
-command=node level00.js
+command=node level00.js {{proxyport}}
 autostart=True
 autorestart=True
 
-[program:0-3]
+[program:{{instance}}-3]
 directory=/opt/ctf/i0/3
-command=/opt/ctf/i0/3/3/bin/python secretvault.py 3003
+command=/opt/ctf/i0/3/3/bin/python secretvault.py {{proxyport+1}}
+
 autostart=True
 autorestart=True
 
-[program:0-4]
+[program:{{instance}}-4]
 directory=/opt/ctf/i0/4
-command=/opt/ctf/i0/4/srv.rb 8004
+command=/opt/ctf/i0/4/srv.rb {{proxyport+4}}
 autostart=True
 autorestart=True
 
-[program:0-5]
+[program:{{instance}}-5]
 directory=/opt/ctf/i0/5
-command=/opt/ctf/i0/5/srv.rb 8005
+command=/opt/ctf/i0/5/srv.rb  {{proxyport+5}}
 autostart=True
 autorestart=True
 
-[program:0-6]
+[program:{{instance}}-6]
 directory=/opt/ctf/i0/6
-command=/opt/ctf/i0/6/srv.rb 8006
+command=/opt/ctf/i0/6/srv.rb {{proxyport+6}}
 autostart=True
 autorestart=True
 
-[program:0-7]
+[program:{{instance}}-7]
 directory=/opt/ctf/i0/7
-command=/opt/ctf/i0/7/7/bin/python wafflecopter.py 3007
+command=/opt/ctf/i0/7/7/bin/python wafflecopter.py  {{proxyport+7}}
 autostart=True
 autorestart=True
 
-[program:0-8]
+[program:{{instance}}-8]
 directory=/opt/ctf/i0/8
 env=PATH='$PATH:.'
-command=/opt/ctf/i0/8/8/bin/python password_db_launcher 123456789012 127.0.0.1:3008
+command=/opt/ctf/i0/8/8/bin/python password_db_launcher 123456789012 127.0.0.1: {{proxyport+8}}
 autostart=True
 autorestart=True
 
