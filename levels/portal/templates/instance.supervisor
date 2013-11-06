@@ -16,7 +16,7 @@ autorestart=True
 
 [program:{{instance}}-4]
 directory=/opt/ctf/{{instance}}/4
-command=/opt/ctf/{{instance}}/4/srv.rb {{proxyport+4}}
+command=/opt/ctf/{{instance}}/4/srv.rb {{proxyport+4-20}}
 autostart=True
 autorestart=True
 
@@ -28,7 +28,7 @@ autorestart=True
 
 [program:{{instance}}-6]
 directory=/opt/ctf/{{instance}}/6
-command=/opt/ctf/{{instance}}/6/srv.rb {{proxyport+6}}
+command=/opt/ctf/{{instance}}/6/srv.rb {{proxyport+6-20}}
 autostart=True
 autorestart=True
 
