@@ -18,9 +18,13 @@ def index():
 def levels(instance):
     return render_template('levels.html', location=location, baseport=baseport+(instance*50), user_id=instance)
 
-@app.route('/<int:instance>/serverconfig')
-def config(instance):
+@app.route('/<int:instance>/nginx')
+def nginx(instance):
     return render_template('instance.conf', instance=instance, baseport=baseport)
+
+@app.route('/<int:instance>/supervisor')
+def supervisor(instance):
+    return render_template('instance.supervisor', instance=instance, baseport=baseport)
 
 
 if __name__ == '__main__':
