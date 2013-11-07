@@ -1,6 +1,8 @@
 from flask import Flask, render_template
+from flask.ext.misaka import Misaka
 
 app = Flask(__name__)
+Misaka(app)
 
 location='http://localhost'
 baseport=8000
@@ -26,6 +28,13 @@ def nginx(instance):
 def supervisor(instance):
     return render_template('instance.supervisor', instance=instance, baseport=baseport)
 
+@app.route('/<int:instance>/passwords')
+def set_password(instance):
+    pass
+
+@app.route('/readmes/<int:level>')
+def show_readme(level):
+    return render_template('readme.html', readme=open('static/{}.readme'.format(level)).read())
 
 if __name__ == '__main__':
     app.run(debug=True, port=1025)
