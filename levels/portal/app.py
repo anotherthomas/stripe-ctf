@@ -104,7 +104,7 @@ def randomize_file(instance, level, filename):
     with open(fullname, 'w') as f:
         f.write(generate_password())
 
-randomizers = [locals().get('randomize_level{}'.format(i), lambda x: x) for i in range(9)]
+randomizers = [locals().get('randomize_level{0}'.format(i), lambda x: x) for i in range(9)]
 
 
 @app.route('/<instance>/<int:level>/randomize')
