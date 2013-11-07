@@ -1,0 +1,59 @@
+<html lang="en" class="wf-futurapt-i4-active wf-futurapt-i7-active wf-futurapt-n4-active wf-futurapt-n7-active wf-active">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Stripe: Capture the Flag 2 Workshop - User {{user_id}} - Level {{level}}</title>
+    <link rel="stylesheet" href="/static/css/styles.css" media="screen">
+
+    <style type="text/css">.tk-futura-pt{font-family:"futura-pt",sans-serif;}</style>
+	<link rel="stylesheet" href="https://use.typekit.net/c/5bf3d6/futura-pt:i4:i7:n4:n7.SH9:F:2,SH6:F:2,SH8:F:2,SH5:F:2/d?3bb2a6e53c9684ffdc9a9bf61d5b2a62d6138ae381e419350a9e4b7132f7f328128f61317c936ceec5364f60ea2146603d04978ebfa2ee589600198ac1fb95ffd1904e7f9c2c7e9889b1b1593abb52197fb20460c11480205b0e674bcc31fa0fa623c41e747719d4f92c16">
+	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+</head>
+  <body class="tk-futura-pt logged-in">
+
+  <div id="header">
+    <h1><a href="/">Stripe: Capture the Flag 2 Workshop</a></h1>
+  </div>
+
+  <div id="main">
+    <div id="title" class="level">
+      <h1>Level {{level}}</h1>
+      <script type="text/javascript">
+    $(function() {
+      $("td.done").click(function() {
+        window.location = "/user{{user_id}}/level" + $(this).attr("level");
+        return false;
+        });
+      });
+    </script>
+   
+    <div id="progress">
+      <table>
+        <tbody>
+   	    <tr>
+{% for i in range(9) %}
+            <td level="{{i}}" class="{{ 'done' if i < level}}{{ 'locked' if i > level}}{{ 'in-progress' if i == level}}"><div><a href="/user{{user_id}}/level{{i}}"><em></em> <span>{{i}}</span></a></div></td>
+{% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+   
+  </div>
+
+  <div id="content">
+    <hr>
+{% autoescape false %}
+{{content}}
+{% endautoescape %}
+  </div>
+
+</div>
+
+
+    <div id="footer">
+      <p>"This code disk means freedom."</p>
+    </div>
+  </body>
+</html>

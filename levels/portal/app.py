@@ -110,5 +110,12 @@ randomizers = [locals().get('randomize_level{0}'.format(i), lambda x: x) for i i
 @app.route('/<instance>/<int:level>/randomize')
 def randomize_level(instance, level):
     return randomizers[level](instance) or "randomized"
+
+@app.route('/test/user<int:instance>/level<int:level>')
+def test(instance, level):
+  content = render_template('test/level{0}.html'.format(level), location=location, user_id=instance, level=level, baseport=instance_baseport(instance))
+  return render_template('test/levels.html', location=location, user_id=instance, level=level, baseport=instance_baseport(instance), content=content)
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=1025)
