@@ -55,6 +55,7 @@ def randomize_level0(instance):
     db_path = os.path.join(install_path, instance, '0/level00.db')
     connection = sqlite3.connect(db_path)
     connection.execute('update secrets set secret = ? where key like "hidden%"', (generate_password(),))
+    connection.commit()
 
 def randomize_level1(instance):
     randomize_file(instance, 1, 'level02-password.txt')
