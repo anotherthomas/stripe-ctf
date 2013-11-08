@@ -73,8 +73,11 @@ def randomize_level4(instance):
     password = 'password.txt'
     randomize_file(instance, 4, password)
     level_path = get_level_path(instance, 4)
-    os.mkdir(os.path.join(level_path, 'public_html'))
-    os.link(os.path.join(level_path, password), os.path.join(level_path, 'public_html', password))
+    try:
+        os.mkdir(os.path.join(level_path, 'public_html'))
+        os.symlink(os.path.join(level_path, password), os.path.join(level_path, 'public_html', password))
+    except OSError:
+        pass
 
 def randomize_level5(instance):
     randomize_file(instance, 5, 'password.txt')
@@ -83,8 +86,11 @@ def randomize_level6(instance):
     password = 'password.txt'
     randomize_file(instance, 6, password)
     level_path = get_level_path(instance, 6)
-    os.mkdir(os.path.join(level_path, 'public_html'))
-    os.link(os.path.join(level_path, password), os.path.join(level_path, 'public_html', password))
+    try:
+        os.mkdir(os.path.join(level_path, 'public_html'))
+        os.link(os.path.join(level_path, password), os.path.join(level_path, 'public_html', password))
+    except OSError:
+        pass
 
 def randomize_level7(instance):
     level_path = get_level_path(instance, '7')
@@ -106,6 +112,11 @@ randomizers = [locals().get('randomize_level{0}'.format(i), lambda x: x) for i i
 @app.route('/<instance>/<int:level>/randomize')
 def randomize_level(instance, level):
     return randomizers[level](instance) or "randomized"
+
+@app.route('/<instance>/randomize')
+def randomize_instance(instance):
+    for i in range(9):
+        randomize_level(instance, i)
 
 @app.route('/user<int:instance>/level<int:level>/')
 def show_level(instance, level):
