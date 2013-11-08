@@ -1,0 +1,795 @@
+  <p> The Karma Trader is the world's best way to reward people for good
+  deeds: <b><a target="_blank" href="{{location}}:{{baseport + level}}">{{location}}:{{baseport + level}}</a></b>. You can sign up for an account, and
+  start transferring karma to people who you think are doing good in the
+  world. In order to ensure you're transferring karma only to good
+  people, transferring karma to a user will also reveal your password to
+  him or her. </p>
+
+  <p> The very active user <strong>karma_fountain</strong> has infinite
+  karma, making it a ripe account to obtain (no one will notice a few
+  extra karma trades here and there). The password for
+  <strong>karma_fountain</strong>'s account will give you access to
+  Level 5. </p>
+
+  <p> You can obtain the full, runnable source for the Karma Trader from
+  <code>git clone https://github.com/stripe-ctf/stripe-ctf-2.0/tree/master/levels/{{level}}</code>. We've included the most important files
+  below. </p>
+
+  <p> The contents of <code>srv.rb</code>:</p>
+{% raw %}
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+<a href="#n57" name="n57">57</a>
+<a href="#n58" name="n58">58</a>
+<a href="#n59" name="n59">59</a>
+<strong><a href="#n60" name="n60">60</a></strong>
+<a href="#n61" name="n61">61</a>
+<a href="#n62" name="n62">62</a>
+<a href="#n63" name="n63">63</a>
+<a href="#n64" name="n64">64</a>
+<a href="#n65" name="n65">65</a>
+<a href="#n66" name="n66">66</a>
+<a href="#n67" name="n67">67</a>
+<a href="#n68" name="n68">68</a>
+<a href="#n69" name="n69">69</a>
+<strong><a href="#n70" name="n70">70</a></strong>
+<a href="#n71" name="n71">71</a>
+<a href="#n72" name="n72">72</a>
+<a href="#n73" name="n73">73</a>
+<a href="#n74" name="n74">74</a>
+<a href="#n75" name="n75">75</a>
+<a href="#n76" name="n76">76</a>
+<a href="#n77" name="n77">77</a>
+<a href="#n78" name="n78">78</a>
+<a href="#n79" name="n79">79</a>
+<strong><a href="#n80" name="n80">80</a></strong>
+<a href="#n81" name="n81">81</a>
+<a href="#n82" name="n82">82</a>
+<a href="#n83" name="n83">83</a>
+<a href="#n84" name="n84">84</a>
+<a href="#n85" name="n85">85</a>
+<a href="#n86" name="n86">86</a>
+<a href="#n87" name="n87">87</a>
+<a href="#n88" name="n88">88</a>
+<a href="#n89" name="n89">89</a>
+<strong><a href="#n90" name="n90">90</a></strong>
+<a href="#n91" name="n91">91</a>
+<a href="#n92" name="n92">92</a>
+<a href="#n93" name="n93">93</a>
+<a href="#n94" name="n94">94</a>
+<a href="#n95" name="n95">95</a>
+<a href="#n96" name="n96">96</a>
+<a href="#n97" name="n97">97</a>
+<a href="#n98" name="n98">98</a>
+<a href="#n99" name="n99">99</a>
+<strong><a href="#n100" name="n100">100</a></strong>
+<a href="#n101" name="n101">101</a>
+<a href="#n102" name="n102">102</a>
+<a href="#n103" name="n103">103</a>
+<a href="#n104" name="n104">104</a>
+<a href="#n105" name="n105">105</a>
+<a href="#n106" name="n106">106</a>
+<a href="#n107" name="n107">107</a>
+<a href="#n108" name="n108">108</a>
+<a href="#n109" name="n109">109</a>
+<strong><a href="#n110" name="n110">110</a></strong>
+<a href="#n111" name="n111">111</a>
+<a href="#n112" name="n112">112</a>
+<a href="#n113" name="n113">113</a>
+<a href="#n114" name="n114">114</a>
+<a href="#n115" name="n115">115</a>
+<a href="#n116" name="n116">116</a>
+<a href="#n117" name="n117">117</a>
+<a href="#n118" name="n118">118</a>
+<a href="#n119" name="n119">119</a>
+<strong><a href="#n120" name="n120">120</a></strong>
+<a href="#n121" name="n121">121</a>
+<a href="#n122" name="n122">122</a>
+<a href="#n123" name="n123">123</a>
+<a href="#n124" name="n124">124</a>
+<a href="#n125" name="n125">125</a>
+<a href="#n126" name="n126">126</a>
+<a href="#n127" name="n127">127</a>
+<a href="#n128" name="n128">128</a>
+<a href="#n129" name="n129">129</a>
+<strong><a href="#n130" name="n130">130</a></strong>
+<a href="#n131" name="n131">131</a>
+<a href="#n132" name="n132">132</a>
+<a href="#n133" name="n133">133</a>
+<a href="#n134" name="n134">134</a>
+<a href="#n135" name="n135">135</a>
+<a href="#n136" name="n136">136</a>
+<a href="#n137" name="n137">137</a>
+<a href="#n138" name="n138">138</a>
+<a href="#n139" name="n139">139</a>
+<strong><a href="#n140" name="n140">140</a></strong>
+<a href="#n141" name="n141">141</a>
+<a href="#n142" name="n142">142</a>
+<a href="#n143" name="n143">143</a>
+<a href="#n144" name="n144">144</a>
+<a href="#n145" name="n145">145</a>
+<a href="#n146" name="n146">146</a>
+<a href="#n147" name="n147">147</a>
+<a href="#n148" name="n148">148</a>
+<a href="#n149" name="n149">149</a>
+<strong><a href="#n150" name="n150">150</a></strong>
+<a href="#n151" name="n151">151</a>
+<a href="#n152" name="n152">152</a>
+<a href="#n153" name="n153">153</a>
+<a href="#n154" name="n154">154</a>
+<a href="#n155" name="n155">155</a>
+<a href="#n156" name="n156">156</a>
+<a href="#n157" name="n157">157</a>
+<a href="#n158" name="n158">158</a>
+<a href="#n159" name="n159">159</a>
+<strong><a href="#n160" name="n160">160</a></strong>
+<a href="#n161" name="n161">161</a>
+<a href="#n162" name="n162">162</a>
+<a href="#n163" name="n163">163</a>
+<a href="#n164" name="n164">164</a>
+<a href="#n165" name="n165">165</a>
+<a href="#n166" name="n166">166</a>
+<a href="#n167" name="n167">167</a>
+<a href="#n168" name="n168">168</a>
+<a href="#n169" name="n169">169</a>
+<strong><a href="#n170" name="n170">170</a></strong>
+<a href="#n171" name="n171">171</a>
+<a href="#n172" name="n172">172</a>
+<a href="#n173" name="n173">173</a>
+<a href="#n174" name="n174">174</a>
+<a href="#n175" name="n175">175</a>
+<a href="#n176" name="n176">176</a>
+<a href="#n177" name="n177">177</a>
+<a href="#n178" name="n178">178</a>
+<a href="#n179" name="n179">179</a>
+<strong><a href="#n180" name="n180">180</a></strong>
+<a href="#n181" name="n181">181</a>
+<a href="#n182" name="n182">182</a>
+<a href="#n183" name="n183">183</a>
+<a href="#n184" name="n184">184</a>
+<a href="#n185" name="n185">185</a>
+<a href="#n186" name="n186">186</a>
+<a href="#n187" name="n187">187</a>
+<a href="#n188" name="n188">188</a>
+<a href="#n189" name="n189">189</a>
+<strong><a href="#n190" name="n190">190</a></strong>
+<a href="#n191" name="n191">191</a>
+<a href="#n192" name="n192">192</a>
+<a href="#n193" name="n193">193</a>
+<a href="#n194" name="n194">194</a>
+<a href="#n195" name="n195">195</a>
+<a href="#n196" name="n196">196</a>
+<a href="#n197" name="n197">197</a>
+<a href="#n198" name="n198">198</a>
+<a href="#n199" name="n199">199</a>
+<strong><a href="#n200" name="n200">200</a></strong>
+<a href="#n201" name="n201">201</a>
+<a href="#n202" name="n202">202</a>
+<a href="#n203" name="n203">203</a>
+<a href="#n204" name="n204">204</a>
+<a href="#n205" name="n205">205</a>
+<a href="#n206" name="n206">206</a>
+<a href="#n207" name="n207">207</a>
+<a href="#n208" name="n208">208</a>
+<a href="#n209" name="n209">209</a>
+<strong><a href="#n210" name="n210">210</a></strong>
+<a href="#n211" name="n211">211</a>
+<a href="#n212" name="n212">212</a>
+<a href="#n213" name="n213">213</a>
+<a href="#n214" name="n214">214</a>
+<a href="#n215" name="n215">215</a>
+<a href="#n216" name="n216">216</a>
+<a href="#n217" name="n217">217</a>
+<a href="#n218" name="n218">218</a>
+<a href="#n219" name="n219">219</a>
+<strong><a href="#n220" name="n220">220</a></strong>
+<a href="#n221" name="n221">221</a>
+<a href="#n222" name="n222">222</a>
+<a href="#n223" name="n223">223</a>
+<a href="#n224" name="n224">224</a>
+<a href="#n225" name="n225">225</a>
+<a href="#n226" name="n226">226</a>
+<a href="#n227" name="n227">227</a>
+<a href="#n228" name="n228">228</a>
+<a href="#n229" name="n229">229</a>
+<strong><a href="#n230" name="n230">230</a></strong>
+<a href="#n231" name="n231">231</a>
+<a href="#n232" name="n232">232</a>
+<a href="#n233" name="n233">233</a>
+<a href="#n234" name="n234">234</a>
+<a href="#n235" name="n235">235</a>
+<a href="#n236" name="n236">236</a>
+<a href="#n237" name="n237">237</a>
+<a href="#n238" name="n238">238</a>
+<a href="#n239" name="n239">239</a>
+<strong><a href="#n240" name="n240">240</a></strong>
+<a href="#n241" name="n241">241</a>
+<a href="#n242" name="n242">242</a>
+<a href="#n243" name="n243">243</a>
+<a href="#n244" name="n244">244</a>
+<a href="#n245" name="n245">245</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#34b">#!/usr/bin/env ruby</span>
+require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">yaml</span><span style="color:#710">'</span></span>
+require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">set</span><span style="color:#710">'</span></span>
+
+require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">rubygems</span><span style="color:#710">'</span></span>
+require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">bundler/setup</span><span style="color:#710">'</span></span>
+
+require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sequel</span><span style="color:#710">'</span></span>
+require <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sinatra</span><span style="color:#710">'</span></span>
+
+<span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">KarmaTrader</span>
+  <span style="color:#036;font-weight:bold">PASSWORD</span> = <span style="color:#036;font-weight:bold">File</span>.read(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">password.txt</span><span style="color:#710">'</span></span>).strip
+  <span style="color:#036;font-weight:bold">STARTING_KARMA</span> = <span style="color:#00D">500</span>
+  <span style="color:#036;font-weight:bold">KARMA_FOUNTAIN</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">karma_fountain</span><span style="color:#710">'</span></span>
+
+  <span style="color:#777"># Only needed in production</span>
+  <span style="color:#036;font-weight:bold">URL_ROOT</span> = <span style="color:#036;font-weight:bold">File</span>.read(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">url_root.txt</span><span style="color:#710">'</span></span>).strip <span style="color:#080;font-weight:bold">rescue</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>
+
+  <span style="color:#080;font-weight:bold">module</span> <span style="color:#B06;font-weight:bold">DB</span>
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#069">self</span>.<span style="color:#06B;font-weight:bold">db_file</span>
+      <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">karma.db</span><span style="color:#710">'</span></span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#069">self</span>.<span style="color:#06B;font-weight:bold">conn</span>
+      <span style="color:#33B">@conn</span> ||= <span style="color:#036;font-weight:bold">Sequel</span>.sqlite(db_file)
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#069">self</span>.<span style="color:#06B;font-weight:bold">init</span>
+      <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">if</span> <span style="color:#036;font-weight:bold">File</span>.exists?(db_file)
+      <span style="color:#036;font-weight:bold">File</span>.umask(<span style="color:#00D">0066</span>)
+
+      conn.create_table(<span style="color:#A60">:users</span>) <span style="color:#080;font-weight:bold">do</span>
+        primary_key <span style="color:#A60">:id</span>
+        <span style="color:#036;font-weight:bold">String</span> <span style="color:#A60">:username</span>
+        <span style="color:#036;font-weight:bold">String</span> <span style="color:#A60">:password</span>
+        <span style="color:#036;font-weight:bold">Integer</span> <span style="color:#A60">:karma</span>
+        <span style="color:#036;font-weight:bold">Time</span> <span style="color:#A60">:last_active</span>
+      <span style="color:#080;font-weight:bold">end</span>
+
+      conn.create_table(<span style="color:#A60">:transfers</span>) <span style="color:#080;font-weight:bold">do</span>
+        primary_id <span style="color:#A60">:id</span>
+        <span style="color:#036;font-weight:bold">String</span> <span style="color:#A60">:from</span>
+        <span style="color:#036;font-weight:bold">String</span> <span style="color:#A60">:to</span>
+        <span style="color:#036;font-weight:bold">Integer</span> <span style="color:#A60">:amount</span>
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#777"># Karma Fountain has infinite karma, so just set it to -1</span>
+      conn[<span style="color:#A60">:users</span>].insert(
+        <span style="color:#A60">:username</span> =&gt; <span style="color:#036;font-weight:bold">KarmaTrader</span>::<span style="color:#036;font-weight:bold">KARMA_FOUNTAIN</span>,
+        <span style="color:#A60">:password</span> =&gt; <span style="color:#036;font-weight:bold">KarmaTrader</span>::<span style="color:#036;font-weight:bold">PASSWORD</span>,
+        <span style="color:#A60">:karma</span> =&gt; <span style="color:#00D">-1</span>,
+        <span style="color:#A60">:last_active</span> =&gt; <span style="color:#036;font-weight:bold">Time</span>.now.utc
+        )
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+
+  <span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">KarmaSrv</span> &lt; <span style="color:#036;font-weight:bold">Sinatra</span>::<span style="color:#036;font-weight:bold">Base</span>
+    set <span style="color:#A60">:environment</span>, <span style="color:#A60">:production</span>
+    enable <span style="color:#A60">:sessions</span>
+
+    <span style="color:#777"># Use persistent entropy file</span>
+    entropy_file = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">entropy.dat</span><span style="color:#710">'</span></span>
+    <span style="color:#080;font-weight:bold">unless</span> <span style="color:#036;font-weight:bold">File</span>.exists?(entropy_file)
+      <span style="color:#036;font-weight:bold">File</span>.open(entropy_file, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">w</span><span style="color:#710">'</span></span>) <span style="color:#080;font-weight:bold">do</span> |f|
+        f.write(<span style="color:#036;font-weight:bold">OpenSSL</span>::<span style="color:#036;font-weight:bold">Random</span>.random_bytes(<span style="color:#00D">24</span>))
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+    set <span style="color:#A60">:session_secret</span>, <span style="color:#036;font-weight:bold">File</span>.read(entropy_file)
+
+    helpers <span style="color:#080;font-weight:bold">do</span>
+      <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">absolute_url</span>(path)
+        <span style="color:#036;font-weight:bold">KarmaTrader</span>::<span style="color:#036;font-weight:bold">URL_ROOT</span> + path
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#777"># Hack to make this work with a URL root</span>
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">redirect</span>(url)
+      <span style="color:#080;font-weight:bold">super</span>(absolute_url(url))
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">die</span>(msg, view)
+      <span style="color:#33B">@error</span> = msg
+      halt(erb(view))
+    <span style="color:#080;font-weight:bold">end</span>
+
+    before <span style="color:#080;font-weight:bold">do</span>
+      refresh_state
+      update_last_active
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">refresh_state</span>
+      <span style="color:#33B">@user</span> = logged_in_user
+      <span style="color:#33B">@transfers</span> = transfers_for_user
+      <span style="color:#33B">@trusts_me</span> = trusts_me
+      <span style="color:#33B">@registered_users</span> = registered_users
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">update_last_active</span>
+      <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">unless</span> <span style="color:#33B">@user</span>
+      <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>].where(<span style="color:#A60">:username</span> =&gt; <span style="color:#33B">@user</span>[<span style="color:#A60">:username</span>]).
+        update(<span style="color:#A60">:last_active</span> =&gt; <span style="color:#036;font-weight:bold">Time</span>.now.utc)
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">logged_in_user</span>
+      <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">unless</span> username = session[<span style="color:#A60">:user</span>]
+      <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>][<span style="color:#A60">:username</span> =&gt; username]
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">transfers_for_user</span>
+      <span style="color:#080;font-weight:bold">return</span> [] <span style="color:#080;font-weight:bold">unless</span> <span style="color:#33B">@user</span>
+
+      <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:transfers</span>].where(
+        <span style="color:#036;font-weight:bold">Sequel</span>.or(<span style="color:#A60">:from</span> =&gt; <span style="color:#33B">@user</span>[<span style="color:#A60">:username</span>], <span style="color:#A60">:to</span> =&gt; <span style="color:#33B">@user</span>[<span style="color:#A60">:username</span>])
+        )
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">trusts_me</span>
+      trusts_me = <span style="color:#036;font-weight:bold">Set</span>.new
+      <span style="color:#080;font-weight:bold">return</span> trusts_me <span style="color:#080;font-weight:bold">unless</span> <span style="color:#33B">@user</span>
+
+      <span style="color:#777"># Get all the users who have transferred credits to me</span>
+      <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:transfers</span>].where(<span style="color:#A60">:to</span> =&gt; <span style="color:#33B">@user</span>[<span style="color:#A60">:username</span>]).
+        join(<span style="color:#A60">:users</span>, <span style="color:#A60">:username</span> =&gt; <span style="color:#A60">:from</span>).each <span style="color:#080;font-weight:bold">do</span> |result|
+        trusts_me.add(result[<span style="color:#A60">:username</span>])
+      <span style="color:#080;font-weight:bold">end</span>
+
+      trusts_me
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">registered_users</span>
+      <span style="color:#036;font-weight:bold">KarmaTrader</span>::<span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>].reverse_order(<span style="color:#A60">:id</span>)
+    <span style="color:#080;font-weight:bold">end</span>
+
+    <span style="color:#777"># KARMA_FOUNTAIN gets all the karma it wants. (Part of why getting</span>
+    <span style="color:#777"># its password would be so great...)</span>
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">user_has_infinite_karma?</span>
+      <span style="color:#33B">@user</span>[<span style="color:#A60">:username</span>] == <span style="color:#036;font-weight:bold">KARMA_FOUNTAIN</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@user</span>
+        erb <span style="color:#A60">:home</span>
+      <span style="color:#080;font-weight:bold">else</span>
+        erb <span style="color:#A60">:login</span>
+      <span style="color:#080;font-weight:bold">end</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/register</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      erb <span style="color:#A60">:register</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    post <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/register</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      username = params[<span style="color:#A60">:username</span>]
+      password = params[<span style="color:#A60">:password</span>]
+      <span style="color:#080;font-weight:bold">unless</span> username &amp;&amp; password
+        die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Please specify both a username and a password.</span><span style="color:#710">"</span></span>, <span style="color:#A60">:register</span>)
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#080;font-weight:bold">unless</span> username =~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">^</span><span style="color:#D20">\w</span><span style="color:#808">+$</span><span style="color:#404">/</span></span>
+        die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Invalid username. Usernames must match /^</span><span style="color:#b0b">\w</span><span style="color:#D20">+$/</span><span style="color:#710">"</span></span>, <span style="color:#A60">:register</span>)
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#080;font-weight:bold">unless</span> <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>].where(<span style="color:#A60">:username</span> =&gt; username).count == <span style="color:#00D">0</span>
+        die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">This username is already registered. Try another one.</span><span style="color:#710">"</span></span>,
+            <span style="color:#A60">:register</span>)
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>].insert(
+        <span style="color:#A60">:username</span> =&gt; username,
+        <span style="color:#A60">:password</span> =&gt; password,
+        <span style="color:#A60">:karma</span> =&gt; <span style="color:#036;font-weight:bold">STARTING_KARMA</span>,
+        <span style="color:#A60">:last_active</span> =&gt; <span style="color:#036;font-weight:bold">Time</span>.now.utc
+        )
+      session[<span style="color:#A60">:user</span>] = username
+      redirect <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/login</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      redirect <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    post <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/login</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      username = params[<span style="color:#A60">:username</span>]
+      password = params[<span style="color:#A60">:password</span>]
+      user = <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>][<span style="color:#A60">:username</span> =&gt; username, <span style="color:#A60">:password</span> =&gt; password]
+      <span style="color:#080;font-weight:bold">unless</span> user
+        die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Could not authenticate. Perhaps you meant to register a new</span><span style="color:#710">'</span></span> \
+            <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20"> account? (See link below.)</span><span style="color:#710">'</span></span>, <span style="color:#A60">:login</span>)
+      <span style="color:#080;font-weight:bold">end</span>
+
+      session[<span style="color:#A60">:user</span>] = user[<span style="color:#A60">:username</span>]
+      redirect <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/transfer</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      redirect <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    post <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/transfer</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      redirect <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">unless</span> <span style="color:#33B">@user</span>
+
+      from = <span style="color:#33B">@user</span>[<span style="color:#A60">:username</span>]
+      to = params[<span style="color:#A60">:to</span>]
+      amount = params[<span style="color:#A60">:amount</span>]
+
+      die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Please fill out all the fields.</span><span style="color:#710">"</span></span>, <span style="color:#A60">:home</span>) <span style="color:#080;font-weight:bold">unless</span> amount &amp;&amp; to
+      amount = amount.to_i
+      die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Invalid amount specified.</span><span style="color:#710">"</span></span>, <span style="color:#A60">:home</span>) <span style="color:#080;font-weight:bold">if</span> amount &lt;= <span style="color:#00D">0</span>
+      die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">You cannot send yourself karma!</span><span style="color:#710">"</span></span>, <span style="color:#A60">:home</span>) <span style="color:#080;font-weight:bold">if</span> to == from
+      <span style="color:#080;font-weight:bold">unless</span> <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>][<span style="color:#A60">:username</span> =&gt; to]
+        die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">No user with username </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>to.inspect<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> found.</span><span style="color:#710">"</span></span>, <span style="color:#A60">:home</span>)
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#080;font-weight:bold">unless</span> user_has_infinite_karma?
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#33B">@user</span>[<span style="color:#A60">:karma</span>] &lt; amount
+          die(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">You only have </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span><span style="color:#33B">@user</span>[<span style="color:#A60">:karma</span>]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> karma left.</span><span style="color:#710">"</span></span>, <span style="color:#A60">:home</span>)
+        <span style="color:#080;font-weight:bold">end</span>
+      <span style="color:#080;font-weight:bold">end</span>
+
+      <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:transfers</span>].insert(<span style="color:#A60">:from</span> =&gt; from, <span style="color:#A60">:to</span> =&gt; to, <span style="color:#A60">:amount</span> =&gt; amount)
+      <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>].where(<span style="color:#A60">:username</span>=&gt;from).update(<span style="color:#A60">:karma</span> =&gt; <span style="color:#A60">:karma</span> - amount)
+      <span style="color:#036;font-weight:bold">DB</span>.conn[<span style="color:#A60">:users</span>].where(<span style="color:#A60">:username</span>=&gt;to).update(<span style="color:#A60">:karma</span> =&gt; <span style="color:#A60">:karma</span> + amount)
+
+      refresh_state
+      <span style="color:#33B">@success</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">You successfully transfered </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>amount<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> karma to</span><span style="color:#710">"</span></span> +
+                 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20"> </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">#{</span>to.inspect<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">.</span><span style="color:#710">"</span></span>
+      erb <span style="color:#A60">:home</span>
+    <span style="color:#080;font-weight:bold">end</span>
+
+    get <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/logout</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">do</span>
+      session.clear
+      redirect <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>
+    <span style="color:#080;font-weight:bold">end</span>
+  <span style="color:#080;font-weight:bold">end</span>
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">main</span>
+  <span style="color:#036;font-weight:bold">KarmaTrader</span>::<span style="color:#036;font-weight:bold">DB</span>.init
+  <span style="color:#036;font-weight:bold">KarmaTrader</span>::<span style="color:#036;font-weight:bold">KarmaSrv</span>.run!
+<span style="color:#080;font-weight:bold">end</span>
+
+<span style="color:#080;font-weight:bold">if</span> <span style="color:#d70">$0</span> == <span style="color:#069">__FILE__</span>
+  main
+  exit(<span style="color:#00D">0</span>)
+<span style="color:#080;font-weight:bold">end</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p> The contents of <code>views/home.erb</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+<a href="#n57" name="n57">57</a>
+<a href="#n58" name="n58">58</a>
+<a href="#n59" name="n59">59</a>
+<strong><a href="#n60" name="n60">60</a></strong>
+<a href="#n61" name="n61">61</a>
+<a href="#n62" name="n62">62</a>
+<a href="#n63" name="n63">63</a>
+<a href="#n64" name="n64">64</a>
+<a href="#n65" name="n65">65</a>
+<a href="#n66" name="n66">66</a>
+<a href="#n67" name="n67">67</a>
+<a href="#n68" name="n68">68</a>
+<a href="#n69" name="n69">69</a>
+<strong><a href="#n70" name="n70">70</a></strong>
+<a href="#n71" name="n71">71</a>
+<a href="#n72" name="n72">72</a>
+<a href="#n73" name="n73">73</a>
+<a href="#n74" name="n74">74</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#070">&lt;h1&gt;</span>Welcome to Karma Trader!<span style="color:#070">&lt;/h1&gt;</span>
+
+<span style="color:#070">&lt;h3&gt;</span>Home<span style="color:#070">&lt;/h3&gt;</span>
+<span style="color:#070">&lt;p&gt;</span>You are logged in as <span style="color:#F00;background-color:#FAA">&lt;</span>%= @user[:username] %<span style="color:#F00;background-color:#FAA">&gt;</span>.<span style="color:#070">&lt;/p&gt;</span>
+
+<span style="color:#070">&lt;h3&gt;</span>Transfer karma<span style="color:#070">&lt;/h3&gt;</span>
+<span style="color:#070">&lt;p&gt;</span>
+  You have <span style="color:#F00;background-color:#FAA">&lt;</span>%= @user[:karma] %<span style="color:#F00;background-color:#FAA">&gt;</span> karma at the moment. Transfer
+  karma to people who have done good deeds and you think will keep
+  doing good deeds in the future.
+<span style="color:#070">&lt;/p&gt;</span>
+
+<span style="color:#070">&lt;p&gt;</span>
+  Note that transferring karma to someone will reveal your
+  password to them, which will hopefully incentivize you to only
+  give karma to people you really trust.
+<span style="color:#070">&lt;/p&gt;</span>
+
+<span style="color:#070">&lt;p&gt;</span>
+  If you're anything like <span style="color:#070">&lt;strong&gt;</span>karma_fountain<span style="color:#070">&lt;/strong&gt;</span>, you'll find
+  yourself logging in every minute to see what new and exciting
+  developments are afoot on the platform. (Though no need to be as paranoid as
+  <span style="color:#070">&lt;strong&gt;</span>karma_fountain<span style="color:#070">&lt;/strong&gt;</span> and firewall your outbound network connections
+  so you can only make connections to the Karma Trader server itself.)
+<span style="color:#070">&lt;/p&gt;</span>
+
+<span style="color:#070">&lt;p&gt;</span>See below for a list of all registered usernames.<span style="color:#070">&lt;/p&gt;</span>
+<span style="color:#070">&lt;form</span> <span style="color:#b48">action</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;%= absolute_url('/transfer') %</span></span><span style="color:#F00;background-color:#FAA">&gt;</span>" method="POST"<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span>To: <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">to</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">to</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span>Amount of karma: <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">text</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">amount</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span><span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">submit</span><span style="color:#710">"</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Submit</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+<span style="color:#070">&lt;/form&gt;</span>
+
+<span style="color:#070">&lt;h3&gt;</span>Past transfers<span style="color:#070">&lt;/h3&gt;</span>
+<span style="color:#070">&lt;table</span> <span style="color:#b48">border</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">1</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+  <span style="color:#070">&lt;tr&gt;</span>
+    <span style="color:#070">&lt;th&gt;</span>From<span style="color:#070">&lt;/th&gt;</span>
+    <span style="color:#070">&lt;th&gt;</span>To<span style="color:#070">&lt;/th&gt;</span>
+    <span style="color:#070">&lt;th&gt;</span>Amount<span style="color:#070">&lt;/th&gt;</span>
+  <span style="color:#070">&lt;/tr&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% @transfers.each do |transfer| %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;tr&gt;</span>
+    <span style="color:#070">&lt;td&gt;</span><span style="color:#F00;background-color:#FAA">&lt;</span>%= transfer[:from] %<span style="color:#F00;background-color:#FAA">&gt;</span><span style="color:#070">&lt;/td&gt;</span>
+    <span style="color:#070">&lt;td&gt;</span><span style="color:#F00;background-color:#FAA">&lt;</span>%= transfer[:to] %<span style="color:#F00;background-color:#FAA">&gt;</span><span style="color:#070">&lt;/td&gt;</span>
+    <span style="color:#070">&lt;td&gt;</span><span style="color:#F00;background-color:#FAA">&lt;</span>%= transfer[:amount] %<span style="color:#F00;background-color:#FAA">&gt;</span><span style="color:#070">&lt;/td&gt;</span>
+  <span style="color:#070">&lt;/tr&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% end %<span style="color:#F00;background-color:#FAA">&gt;</span>
+<span style="color:#070">&lt;/table&gt;</span>
+
+<span style="color:#070">&lt;h3&gt;</span> Registered Users <span style="color:#070">&lt;/h3&gt;</span>
+<span style="color:#070">&lt;ul&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% @registered_users.each do |user| %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% last_active = user[:last_active].strftime('%H:%M:%S UTC') %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% if @trusts_me.include?(user[:username]) %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;li&gt;</span>
+    <span style="color:#F00;background-color:#FAA">&lt;</span>%= user[:username] %<span style="color:#F00;background-color:#FAA">&gt;</span>
+    (password: <span style="color:#F00;background-color:#FAA">&lt;</span>%= user[:password] %<span style="color:#F00;background-color:#FAA">&gt;</span>, last active <span style="color:#F00;background-color:#FAA">&lt;</span>%= last_active %<span style="color:#F00;background-color:#FAA">&gt;</span>)
+  <span style="color:#070">&lt;/li&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% elsif user[:username] == @user[:username] %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;li&gt;</span>
+    <span style="color:#F00;background-color:#FAA">&lt;</span>%= user[:username] %<span style="color:#F00;background-color:#FAA">&gt;</span>
+    (<span style="color:#070">&lt;strong&gt;</span>you<span style="color:#070">&lt;/strong&gt;</span>, last active <span style="color:#F00;background-color:#FAA">&lt;</span>%= last_active %<span style="color:#F00;background-color:#FAA">&gt;</span>)
+  <span style="color:#070">&lt;/li&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% else %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;li&gt;</span>
+    <span style="color:#F00;background-color:#FAA">&lt;</span>%= user[:username] %<span style="color:#F00;background-color:#FAA">&gt;</span>
+    (password: <span style="color:#070">&lt;i&gt;</span>[hasn't yet transferred karma to you]<span style="color:#070">&lt;/i&gt;</span>,
+    last active <span style="color:#F00;background-color:#FAA">&lt;</span>%= last_active %<span style="color:#F00;background-color:#FAA">&gt;</span>)
+  <span style="color:#070">&lt;/li&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% end %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#F00;background-color:#FAA">&lt;</span>% end %<span style="color:#F00;background-color:#FAA">&gt;</span>
+<span style="color:#070">&lt;/ul&gt;</span>
+
+<span style="color:#070">&lt;p&gt;</span><span style="color:#070">&lt;a</span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;%= absolute_url('/logout') %</span></span><span style="color:#F00;background-color:#FAA">&gt;</span>"<span style="color:#F00;background-color:#FAA">&gt;</span>Log out<span style="color:#070">&lt;/a&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p> The contents of <code>views/login.erb</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#070">&lt;h1&gt;</span>
+  Welcome to Karma Trader, the best way to reward people for good deeds!
+<span style="color:#070">&lt;/h1&gt;</span>
+
+<span style="color:#070">&lt;h3&gt;</span>Login<span style="color:#070">&lt;/h3&gt;</span>
+
+<span style="color:#070">&lt;form</span> <span style="color:#b48">action</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;%= absolute_url('/login') %</span></span><span style="color:#F00;background-color:#FAA">&gt;</span>" method="POST"<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span>Username: <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">text</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">username</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span>Password: <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span><span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">submit</span><span style="color:#710">"</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Log in</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+<span style="color:#070">&lt;/form&gt;</span>
+
+<span style="color:#070">&lt;p&gt;</span>
+  Don't have an account?
+  <span style="color:#070">&lt;a</span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;%= absolute_url('/register') %</span></span><span style="color:#F00;background-color:#FAA">&gt;</span>"<span style="color:#F00;background-color:#FAA">&gt;</span>Register<span style="color:#070">&lt;/a&gt;</span> now!
+<span style="color:#070">&lt;/p&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p> The contents of <code>views/register.erb</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#070">&lt;h1&gt;</span>Welcome to Karma Trader, the best way to reward people for good deeds!<span style="color:#070">&lt;/h1&gt;</span>
+
+<span style="color:#070">&lt;h3&gt;</span>Register<span style="color:#070">&lt;/h3&gt;</span>
+
+<span style="color:#070">&lt;form</span> <span style="color:#b48">action</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;%= absolute_url('/register') %</span></span><span style="color:#F00;background-color:#FAA">&gt;</span>" method="POST"<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span>Pick your username: <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">text</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">username</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span>Choose a password: <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span><span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">submit</span><span style="color:#710">"</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Create account</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+<span style="color:#070">&lt;/form&gt;</span>
+
+<span style="color:#070">&lt;p&gt;</span>Already have an account? <span style="color:#070">&lt;a</span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;%= absolute_url('/') %</span></span><span style="color:#F00;background-color:#FAA">&gt;</span>"<span style="color:#F00;background-color:#FAA">&gt;</span>Log in<span style="color:#070">&lt;/a&gt;</span> now!<span style="color:#070">&lt;/p&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p> The contents of <code>views/layout.erb</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#F00;background-color:#FAA">&lt;</span>!doctype html<span style="color:#F00;background-color:#FAA">&gt;</span>
+<span style="color:#070">&lt;html&gt;</span>
+  <span style="color:#070">&lt;head&gt;</span>
+    <span style="color:#070">&lt;title&gt;</span>Karma Trader<span style="color:#070">&lt;/title&gt;</span>
+    <span style="color:#070">&lt;script</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">text/javascript</span><span style="color:#710">"</span></span>
+            <span style="color:#b48">src</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;%= absolute_url('/js/jquery-1.8.0.min.js') %</span></span><span style="color:#F00;background-color:#FAA">&gt;</span>"<span style="color:#F00;background-color:#FAA">&gt;</span><span style="color:#070">&lt;/script&gt;</span>
+  <span style="color:#070">&lt;/head&gt;</span>
+  <span style="color:#070">&lt;body&gt;</span>
+<span style="color:#F00;background-color:#FAA">&lt;</span>% if @error %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span>Error: <span style="color:#F00;background-color:#FAA">&lt;</span>%= @error %<span style="color:#F00;background-color:#FAA">&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+<span style="color:#F00;background-color:#FAA">&lt;</span>% end %<span style="color:#F00;background-color:#FAA">&gt;</span>
+<span style="color:#F00;background-color:#FAA">&lt;</span>% if @success %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;p&gt;</span>Success: <span style="color:#F00;background-color:#FAA">&lt;</span>%= @success %<span style="color:#F00;background-color:#FAA">&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+<span style="color:#F00;background-color:#FAA">&lt;</span>% end %<span style="color:#F00;background-color:#FAA">&gt;</span>
+
+<span style="color:#F00;background-color:#FAA">&lt;</span>%= yield %<span style="color:#F00;background-color:#FAA">&gt;</span>
+  <span style="color:#070">&lt;/body&gt;</span>
+<span style="color:#070">&lt;/html&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+{% endraw %}

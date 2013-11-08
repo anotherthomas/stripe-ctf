@@ -1,0 +1,126 @@
+  <p> You are now on Level 2, the Social Network. Excellent work so far!
+  Social Networks are all the rage these days, so we decided to build
+  one for CTF. Please fill out your profile at <b><a target="_blank" href="{{location}}:{{baseport+1}}/2/index.php">{{location}}:{{baseport+1}}/2/index.php</a></b>. You may even be able to find the password for Level 3 by doing
+  so. </p>
+
+  <p> The code for the Social Network can be obtained from
+  <code>git clone https://github.com/stripe-ctf/stripe-ctf-2.0/tree/master/levels/{{level}}</code>, and is also included below. </p>
+
+  <p> The contents of <code>index.php</code>:</p>
+{% raw %}
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+</pre></td>
+  <td class="code"><pre><span style="font-weight:bold;color:#666">&lt;?php</span>
+  session_start();
+
+  <span style="color:#080;font-weight:bold">if</span> (<span style="color:#369;font-weight:bold">$_FILES</span>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic</span><span style="color:#710">"</span></span>][<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">error</span><span style="color:#710">"</span></span>] &gt; <span style="color:#00D">0</span>) {
+    <span style="color:#369;font-weight:bold">echo</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;p&gt;Error: </span><span style="color:#710">"</span></span> . <span style="color:#369;font-weight:bold">$_FILES</span>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic</span><span style="color:#710">"</span></span>][<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">error</span><span style="color:#710">"</span></span>] . <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;/p&gt;</span><span style="color:#710">"</span></span>;
+  }
+  <span style="color:#080;font-weight:bold">else</span>
+  {
+    <span style="color:#963">$dest_dir</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">uploads/</span><span style="color:#710">"</span></span>;
+    <span style="color:#963">$dest</span> = <span style="color:#963">$dest_dir</span> . <span style="color:#369;font-weight:bold">basename</span>(<span style="color:#369;font-weight:bold">$_FILES</span>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic</span><span style="color:#710">"</span></span>][<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">name</span><span style="color:#710">"</span></span>]);
+    <span style="color:#963">$src</span> = <span style="color:#369;font-weight:bold">$_FILES</span>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic</span><span style="color:#710">"</span></span>][<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">tmp_name</span><span style="color:#710">"</span></span>];
+    <span style="color:#080;font-weight:bold">if</span> (move_uploaded_file(<span style="color:#963">$src</span>, <span style="color:#963">$dest</span>)) {
+      <span style="color:#369;font-weight:bold">$_SESSION</span>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic_url</span><span style="color:#710">"</span></span>] = <span style="color:#963">$dest</span>;
+      <span style="color:#369;font-weight:bold">chmod</span>(<span style="color:#963">$dest</span>, <span style="color:#00D">0644</span>);
+      <span style="color:#369;font-weight:bold">echo</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;p&gt;Successfully uploaded your display picture.&lt;/p&gt;</span><span style="color:#710">"</span></span>;
+    }
+  }
+
+  <span style="color:#963">$url</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">https://upload.wikimedia.org/wikipedia/commons/f/f8/</span><span style="color:#710">"</span></span> .
+         <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Question_mark_alternate.svg</span><span style="color:#710">"</span></span>;
+  <span style="color:#080;font-weight:bold">if</span> (<span style="color:#369;font-weight:bold">isset</span>(<span style="color:#369;font-weight:bold">$_SESSION</span>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic_url</span><span style="color:#710">"</span></span>])) {
+    <span style="color:#963">$url</span> = <span style="color:#369;font-weight:bold">$_SESSION</span>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic_url</span><span style="color:#710">"</span></span>];
+  }
+
+<span style="font-weight:bold;color:#666">?&gt;</span>
+
+<span style="color:#070">&lt;html&gt;</span>
+  <span style="color:#070">&lt;head&gt;</span>
+    <span style="color:#070">&lt;title&gt;</span>Welcome to the CTF!<span style="color:#070">&lt;/title&gt;</span>
+  <span style="color:#070">&lt;/head&gt;</span>
+  <span style="color:#070">&lt;body&gt;</span>
+    <span style="color:#070">&lt;center&gt;</span>
+      <span style="color:#070">&lt;h1&gt;</span>Welcome to the CTF Social Network!<span style="color:#070">&lt;/h1&gt;</span>
+      <span style="color:#070">&lt;div&gt;</span>
+        <span style="color:#070">&lt;img</span> <span style="color:#b48">src</span>=<span style="font-weight:bold;color:#666">&lt;?php</span> <span style="color:#369;font-weight:bold">echo</span> <span style="color:#963">$url</span>; <span style="font-weight:bold;color:#666">?&gt;</span> <span style="color:#070">/&gt;</span>
+        <span style="font-weight:bold;color:#666">&lt;?php</span>
+          <span style="color:#080;font-weight:bold">if</span> (!<span style="color:#369;font-weight:bold">isset</span>(<span style="color:#369;font-weight:bold">$_SESSION</span>[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic_url</span><span style="color:#710">"</span></span>])) {
+            <span style="color:#369;font-weight:bold">echo</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;p&gt;Oh, looks like you don't have a profile image</span><span style="color:#710">"</span></span> .
+                 <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20"> -- upload one now!&lt;/p&gt;</span><span style="color:#710">"</span></span>;
+          }
+        <span style="font-weight:bold;color:#666">?&gt;</span>
+        <span style="color:#070">&lt;form</span> <span style="color:#b48">action</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#710">"</span></span> <span style="color:#b48">method</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">post</span><span style="color:#710">"</span></span> <span style="color:#b48">enctype</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">multipart/form-data</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+          <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">file</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">dispic</span><span style="color:#710">"</span></span> <span style="color:#b48">size</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">40</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span>
+          <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">submit</span><span style="color:#710">"</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Upload!</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+        <span style="color:#070">&lt;/form&gt;</span>
+
+        <span style="color:#070">&lt;p&gt;</span>
+           Password for Level 3 (accessible only to members of the club):
+           <span style="color:#070">&lt;a</span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password.txt</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>password.txt<span style="color:#070">&lt;/a&gt;</span>
+        <span style="color:#070">&lt;/p&gt;</span>
+      <span style="color:#070">&lt;/div&gt;</span>
+    <span style="color:#070">&lt;/center&gt;</span>
+  <span style="color:#070">&lt;/body&gt;</span>
+<span style="color:#070">&lt;/html&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+{% endraw %}

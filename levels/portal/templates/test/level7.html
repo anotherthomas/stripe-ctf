@@ -1,0 +1,1342 @@
+  <p>
+  Welcome to the penultimate level, Level 7.
+  </p>
+
+  <p>
+  WaffleCopter is a new service delivering locally-sourced organic waffles hot
+  off of vintage waffle irons straight to your location using quad-rotor
+  GPS-enabled helicopters. The service is modeled after
+  <a href="http://tacocopter.com/">TacoCopter</a>, an innovative and highly
+  successful early contender in the airborne food delivery industry. WaffleCopter
+  is currently being tested in private beta in select locations.
+  </p>
+
+  <p>
+  Your goal is to order one of the decadent Liege Waffles, offered only to
+  WaffleCopter's first premium subscribers.
+  </p>
+
+  <p>
+  Log in to your account at <b><a target="_blank" href="{{location}}:{{baseport + level}}">{{location}}:{{baseport + level}}</a></b> with username
+  <code>ctf</code> and password <code>password</code>. You will find your API
+  credentials after logging in. You can fetch the code for the level via<br>
+  <code>git clone https://github.com/stripe-ctf/stripe-ctf-2.0/tree/master/levels/{{level}}</code>, or you can read it below. You may find the sample
+  API client in <code>client.py</code> particularly helpful.
+  </p>
+
+  <p>The contents of <code>client.py</code>:</p>
+{% raw %}
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+<a href="#n57" name="n57">57</a>
+<a href="#n58" name="n58">58</a>
+<a href="#n59" name="n59">59</a>
+<strong><a href="#n60" name="n60">60</a></strong>
+<a href="#n61" name="n61">61</a>
+<a href="#n62" name="n62">62</a>
+<a href="#n63" name="n63">63</a>
+<a href="#n64" name="n64">64</a>
+<a href="#n65" name="n65">65</a>
+<a href="#n66" name="n66">66</a>
+<a href="#n67" name="n67">67</a>
+<a href="#n68" name="n68">68</a>
+<a href="#n69" name="n69">69</a>
+<strong><a href="#n70" name="n70">70</a></strong>
+<a href="#n71" name="n71">71</a>
+<a href="#n72" name="n72">72</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#777">#!/usr/bin/env python</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">hashlib</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">json</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sys</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">urllib</span>
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">requests</span>
+
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ClientError</span>(<span style="color:#C00;font-weight:bold">Exception</span>):
+    <span style="color:#080;font-weight:bold">pass</span>
+
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">Client</span>(<span style="color:#369;font-weight:bold">object</span>):
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">__init__</span>(<span style="color:#069">self</span>, endpoint, user_id, api_secret):
+        <span style="color:#069">self</span>.endpoint = endpoint
+        <span style="color:#069">self</span>.user_id = user_id
+        <span style="color:#069">self</span>.api_secret = api_secret
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">order</span>(<span style="color:#069">self</span>, waffle_name, coords, count=<span style="color:#00D">1</span>):
+        <span style="color:#777"><span style="color:#444">"""</span><span>Order one or more waffles.</span><span style="color:#444">"""</span></span>
+        params = {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffle</span><span style="color:#710">'</span></span>: waffle_name, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">count</span><span style="color:#710">'</span></span>: count,
+                  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">lat</span><span style="color:#710">'</span></span>: coords[<span style="color:#00D">0</span>], <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">long</span><span style="color:#710">'</span></span>: coords[<span style="color:#00D">1</span>]}
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">self</span>.api_call(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/orders</span><span style="color:#710">'</span></span>, params)
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">api_call</span>(<span style="color:#069">self</span>, path, params, debug_response=<span style="color:#069">False</span>):
+        <span style="color:#777"><span style="color:#444">"""</span><span>Make an API call with parameters to the specified path.</span><span style="color:#444">"""</span></span>
+        body = <span style="color:#069">self</span>._make_post(params)
+        resp = requests.post(<span style="color:#069">self</span>.endpoint + path, data=body)
+
+        <span style="color:#777"># for debugging</span>
+        <span style="color:#080;font-weight:bold">if</span> debug_response:
+            <span style="color:#080;font-weight:bold">return</span> resp
+
+        <span style="color:#777"># try to decode response as json</span>
+        data = <span style="color:#069">None</span>
+        <span style="color:#080;font-weight:bold">if</span> resp.headers[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">content-type</span><span style="color:#710">'</span></span>] == <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">application/json</span><span style="color:#710">'</span></span>:
+            <span style="color:#080;font-weight:bold">try</span>:
+                data = json.loads(resp.text)
+            <span style="color:#080;font-weight:bold">except</span> <span style="color:#C00;font-weight:bold">ValueError</span>:
+                <span style="color:#080;font-weight:bold">pass</span>
+            <span style="color:#080;font-weight:bold">else</span>:
+                <span style="color:#777"># raise error message if any</span>
+                error = data.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">error</span><span style="color:#710">'</span></span>)
+                <span style="color:#080;font-weight:bold">if</span> error:
+                    <span style="color:#080;font-weight:bold">raise</span> ClientError(error)
+
+        <span style="color:#777"># raise error on non-200 status codes</span>
+        resp.raise_for_status()
+
+        <span style="color:#777"># return response data decoded from JSON or just response body</span>
+        <span style="color:#080;font-weight:bold">return</span> data <span style="color:#080;font-weight:bold">or</span> resp.text
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">_make_post</span>(<span style="color:#069">self</span>, params):
+        params[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>] = <span style="color:#069">self</span>.user_id
+        body = urllib.urlencode(params)
+
+        sig = <span style="color:#069">self</span>._signature(body)
+        body += <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">|sig:</span><span style="color:#710">'</span></span> + sig
+
+        <span style="color:#080;font-weight:bold">return</span> body
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">_signature</span>(<span style="color:#069">self</span>, message):
+        h = hashlib.sha1()
+        h.update(<span style="color:#069">self</span>.api_secret + message)
+        <span style="color:#080;font-weight:bold">return</span> h.hexdigest()
+
+<span style="color:#080;font-weight:bold">if</span> __name__ == <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">__main__</span><span style="color:#710">'</span></span>:
+    <span style="color:#080;font-weight:bold">if</span> <span style="color:#369;font-weight:bold">len</span>(sys.argv) != <span style="color:#00D">7</span>:
+        <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">usage: client.py ENDPOINT USER_ID SECRET WAFFLE LAT LONG</span><span style="color:#710">'</span></span>
+        sys.exit(<span style="color:#00D">1</span>)
+
+    c = Client(*sys.argv[<span style="color:#00D">1</span>:<span style="color:#00D">4</span>])
+    <span style="color:#080;font-weight:bold">print</span> c.order(sys.argv[<span style="color:#00D">4</span>], sys.argv[<span style="color:#00D">5</span>:<span style="color:#00D">7</span>])
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p>The contents of <code>wafflecopter.py</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+<a href="#n57" name="n57">57</a>
+<a href="#n58" name="n58">58</a>
+<a href="#n59" name="n59">59</a>
+<strong><a href="#n60" name="n60">60</a></strong>
+<a href="#n61" name="n61">61</a>
+<a href="#n62" name="n62">62</a>
+<a href="#n63" name="n63">63</a>
+<a href="#n64" name="n64">64</a>
+<a href="#n65" name="n65">65</a>
+<a href="#n66" name="n66">66</a>
+<a href="#n67" name="n67">67</a>
+<a href="#n68" name="n68">68</a>
+<a href="#n69" name="n69">69</a>
+<strong><a href="#n70" name="n70">70</a></strong>
+<a href="#n71" name="n71">71</a>
+<a href="#n72" name="n72">72</a>
+<a href="#n73" name="n73">73</a>
+<a href="#n74" name="n74">74</a>
+<a href="#n75" name="n75">75</a>
+<a href="#n76" name="n76">76</a>
+<a href="#n77" name="n77">77</a>
+<a href="#n78" name="n78">78</a>
+<a href="#n79" name="n79">79</a>
+<strong><a href="#n80" name="n80">80</a></strong>
+<a href="#n81" name="n81">81</a>
+<a href="#n82" name="n82">82</a>
+<a href="#n83" name="n83">83</a>
+<a href="#n84" name="n84">84</a>
+<a href="#n85" name="n85">85</a>
+<a href="#n86" name="n86">86</a>
+<a href="#n87" name="n87">87</a>
+<a href="#n88" name="n88">88</a>
+<a href="#n89" name="n89">89</a>
+<strong><a href="#n90" name="n90">90</a></strong>
+<a href="#n91" name="n91">91</a>
+<a href="#n92" name="n92">92</a>
+<a href="#n93" name="n93">93</a>
+<a href="#n94" name="n94">94</a>
+<a href="#n95" name="n95">95</a>
+<a href="#n96" name="n96">96</a>
+<a href="#n97" name="n97">97</a>
+<a href="#n98" name="n98">98</a>
+<a href="#n99" name="n99">99</a>
+<strong><a href="#n100" name="n100">100</a></strong>
+<a href="#n101" name="n101">101</a>
+<a href="#n102" name="n102">102</a>
+<a href="#n103" name="n103">103</a>
+<a href="#n104" name="n104">104</a>
+<a href="#n105" name="n105">105</a>
+<a href="#n106" name="n106">106</a>
+<a href="#n107" name="n107">107</a>
+<a href="#n108" name="n108">108</a>
+<a href="#n109" name="n109">109</a>
+<strong><a href="#n110" name="n110">110</a></strong>
+<a href="#n111" name="n111">111</a>
+<a href="#n112" name="n112">112</a>
+<a href="#n113" name="n113">113</a>
+<a href="#n114" name="n114">114</a>
+<a href="#n115" name="n115">115</a>
+<a href="#n116" name="n116">116</a>
+<a href="#n117" name="n117">117</a>
+<a href="#n118" name="n118">118</a>
+<a href="#n119" name="n119">119</a>
+<strong><a href="#n120" name="n120">120</a></strong>
+<a href="#n121" name="n121">121</a>
+<a href="#n122" name="n122">122</a>
+<a href="#n123" name="n123">123</a>
+<a href="#n124" name="n124">124</a>
+<a href="#n125" name="n125">125</a>
+<a href="#n126" name="n126">126</a>
+<a href="#n127" name="n127">127</a>
+<a href="#n128" name="n128">128</a>
+<a href="#n129" name="n129">129</a>
+<strong><a href="#n130" name="n130">130</a></strong>
+<a href="#n131" name="n131">131</a>
+<a href="#n132" name="n132">132</a>
+<a href="#n133" name="n133">133</a>
+<a href="#n134" name="n134">134</a>
+<a href="#n135" name="n135">135</a>
+<a href="#n136" name="n136">136</a>
+<a href="#n137" name="n137">137</a>
+<a href="#n138" name="n138">138</a>
+<a href="#n139" name="n139">139</a>
+<strong><a href="#n140" name="n140">140</a></strong>
+<a href="#n141" name="n141">141</a>
+<a href="#n142" name="n142">142</a>
+<a href="#n143" name="n143">143</a>
+<a href="#n144" name="n144">144</a>
+<a href="#n145" name="n145">145</a>
+<a href="#n146" name="n146">146</a>
+<a href="#n147" name="n147">147</a>
+<a href="#n148" name="n148">148</a>
+<a href="#n149" name="n149">149</a>
+<strong><a href="#n150" name="n150">150</a></strong>
+<a href="#n151" name="n151">151</a>
+<a href="#n152" name="n152">152</a>
+<a href="#n153" name="n153">153</a>
+<a href="#n154" name="n154">154</a>
+<a href="#n155" name="n155">155</a>
+<a href="#n156" name="n156">156</a>
+<a href="#n157" name="n157">157</a>
+<a href="#n158" name="n158">158</a>
+<a href="#n159" name="n159">159</a>
+<strong><a href="#n160" name="n160">160</a></strong>
+<a href="#n161" name="n161">161</a>
+<a href="#n162" name="n162">162</a>
+<a href="#n163" name="n163">163</a>
+<a href="#n164" name="n164">164</a>
+<a href="#n165" name="n165">165</a>
+<a href="#n166" name="n166">166</a>
+<a href="#n167" name="n167">167</a>
+<a href="#n168" name="n168">168</a>
+<a href="#n169" name="n169">169</a>
+<strong><a href="#n170" name="n170">170</a></strong>
+<a href="#n171" name="n171">171</a>
+<a href="#n172" name="n172">172</a>
+<a href="#n173" name="n173">173</a>
+<a href="#n174" name="n174">174</a>
+<a href="#n175" name="n175">175</a>
+<a href="#n176" name="n176">176</a>
+<a href="#n177" name="n177">177</a>
+<a href="#n178" name="n178">178</a>
+<a href="#n179" name="n179">179</a>
+<strong><a href="#n180" name="n180">180</a></strong>
+<a href="#n181" name="n181">181</a>
+<a href="#n182" name="n182">182</a>
+<a href="#n183" name="n183">183</a>
+<a href="#n184" name="n184">184</a>
+<a href="#n185" name="n185">185</a>
+<a href="#n186" name="n186">186</a>
+<a href="#n187" name="n187">187</a>
+<a href="#n188" name="n188">188</a>
+<a href="#n189" name="n189">189</a>
+<strong><a href="#n190" name="n190">190</a></strong>
+<a href="#n191" name="n191">191</a>
+<a href="#n192" name="n192">192</a>
+<a href="#n193" name="n193">193</a>
+<a href="#n194" name="n194">194</a>
+<a href="#n195" name="n195">195</a>
+<a href="#n196" name="n196">196</a>
+<a href="#n197" name="n197">197</a>
+<a href="#n198" name="n198">198</a>
+<a href="#n199" name="n199">199</a>
+<strong><a href="#n200" name="n200">200</a></strong>
+<a href="#n201" name="n201">201</a>
+<a href="#n202" name="n202">202</a>
+<a href="#n203" name="n203">203</a>
+<a href="#n204" name="n204">204</a>
+<a href="#n205" name="n205">205</a>
+<a href="#n206" name="n206">206</a>
+<a href="#n207" name="n207">207</a>
+<a href="#n208" name="n208">208</a>
+<a href="#n209" name="n209">209</a>
+<strong><a href="#n210" name="n210">210</a></strong>
+<a href="#n211" name="n211">211</a>
+<a href="#n212" name="n212">212</a>
+<a href="#n213" name="n213">213</a>
+<a href="#n214" name="n214">214</a>
+<a href="#n215" name="n215">215</a>
+<a href="#n216" name="n216">216</a>
+<a href="#n217" name="n217">217</a>
+<a href="#n218" name="n218">218</a>
+<a href="#n219" name="n219">219</a>
+<strong><a href="#n220" name="n220">220</a></strong>
+<a href="#n221" name="n221">221</a>
+<a href="#n222" name="n222">222</a>
+<a href="#n223" name="n223">223</a>
+<a href="#n224" name="n224">224</a>
+<a href="#n225" name="n225">225</a>
+<a href="#n226" name="n226">226</a>
+<a href="#n227" name="n227">227</a>
+<a href="#n228" name="n228">228</a>
+<a href="#n229" name="n229">229</a>
+<strong><a href="#n230" name="n230">230</a></strong>
+<a href="#n231" name="n231">231</a>
+<a href="#n232" name="n232">232</a>
+<a href="#n233" name="n233">233</a>
+<a href="#n234" name="n234">234</a>
+<a href="#n235" name="n235">235</a>
+<a href="#n236" name="n236">236</a>
+<a href="#n237" name="n237">237</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#777">#!/usr/bin/env python</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">hashlib</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">json</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">logging</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">os</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sys</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">urllib</span>
+<span style="color:#080;font-weight:bold">from</span> <span style="color:#B44;font-weight:bold">functools</span> <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">wraps</span>
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">bcrypt</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sqlite3</span>
+<span style="color:#080;font-weight:bold">from</span> <span style="color:#B44;font-weight:bold">flask</span> <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">Flask</span>, <span style="color:#B44;font-weight:bold">session</span>, <span style="color:#B44;font-weight:bold">request</span>, <span style="color:#B44;font-weight:bold">redirect</span>, <span style="color:#B44;font-weight:bold">render_template</span>, <span style="color:#B44;font-weight:bold">g</span>, <span style="color:#B44;font-weight:bold">abort</span>
+<span style="color:#080;font-weight:bold">from</span> <span style="color:#B44;font-weight:bold">flask</span> <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">make_response</span>
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">db</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">settings</span>
+
+app = Flask(__name__)
+app.config.from_object(settings)
+app.logger.addHandler(logging.StreamHandler(sys.stderr))
+
+
+<span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">not</span> os.path.exists(settings.entropy_file):
+    <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Entropy file not found. Have you run initialize_db.py?</span><span style="color:#710">'</span></span>
+
+<span style="color:#777"># use persistent entropy file for secret_key</span>
+app.secret_key = <span style="color:#369;font-weight:bold">open</span>(settings.entropy_file, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">r</span><span style="color:#710">'</span></span>).read()
+
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">BadSignature</span>(<span style="color:#C00;font-weight:bold">Exception</span>):
+    <span style="color:#080;font-weight:bold">pass</span>
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">BadRequest</span>(<span style="color:#C00;font-weight:bold">Exception</span>):
+    <span style="color:#080;font-weight:bold">pass</span>
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">valid_user</span>(user, passwd):
+    <span style="color:#080;font-weight:bold">try</span>:
+        row = g.db.select_one(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">users</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">name</span><span style="color:#710">'</span></span>: user})
+    <span style="color:#080;font-weight:bold">except</span> db.NotFound:
+        <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Invalid user</span><span style="color:#710">'</span></span>, <span style="color:#369;font-weight:bold">repr</span>(user)
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">False</span>
+    <span style="color:#080;font-weight:bold">if</span> bcrypt.hashpw(passwd, row[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">password</span><span style="color:#710">'</span></span>]) == row[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">password</span><span style="color:#710">'</span></span>]:
+        <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Valid user:</span><span style="color:#710">'</span></span>, <span style="color:#369;font-weight:bold">repr</span>(user)
+        <span style="color:#080;font-weight:bold">return</span> row
+    <span style="color:#080;font-weight:bold">else</span>:
+        <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Invalid password for</span><span style="color:#710">'</span></span>, <span style="color:#369;font-weight:bold">repr</span>(user)
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">False</span>
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">log_in</span>(user, row):
+    session[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user</span><span style="color:#710">'</span></span>] = row
+    session[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">username</span><span style="color:#710">'</span></span>] = user
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">absolute_url</span>(path):
+    <span style="color:#080;font-weight:bold">return</span> settings.url_root + path
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">require_authentication</span>(func):
+    <span style="color:#B0B">@wraps</span>(func)
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">newfunc</span>(*args, **kwargs):
+        <span style="color:#080;font-weight:bold">if</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">not</span> <span style="color:#080;font-weight:bold">in</span> session:
+            <span style="color:#080;font-weight:bold">return</span> redirect(absolute_url(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/login</span><span style="color:#710">'</span></span>))
+        <span style="color:#080;font-weight:bold">return</span> func(*args, **kwargs)
+    <span style="color:#080;font-weight:bold">return</span> newfunc
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">json_response</span>(obj, status_code=<span style="color:#00D">200</span>):
+    text = json.dumps(obj) + <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#b0b">\n</span><span style="color:#710">'</span></span>
+    resp = make_response(text, status_code)
+    resp.headers[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">content-type</span><span style="color:#710">'</span></span>] = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">application/json</span><span style="color:#710">'</span></span>
+    <span style="color:#080;font-weight:bold">return</span> resp
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">json_error</span>(message, status_code):
+    <span style="color:#080;font-weight:bold">return</span> json_response({<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">error</span><span style="color:#710">'</span></span>: message}, status_code)
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">log_api_request</span>(user_id, path, body):
+    <span style="color:#080;font-weight:bold">if</span> <span style="color:#369;font-weight:bold">isinstance</span>(body, <span style="color:#369;font-weight:bold">str</span>):
+        <span style="color:#777"># body is a string byte stream, but sqlite will think it's utf-8</span>
+        <span style="color:#777"># convert each character to unicode so it's unambiguous</span>
+        body = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>.join(<span style="color:#369;font-weight:bold">unichr</span>(<span style="color:#369;font-weight:bold">ord</span>(c)) <span style="color:#080;font-weight:bold">for</span> c <span style="color:#080;font-weight:bold">in</span> body)
+    g.db.insert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">logs</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>: user_id, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path</span><span style="color:#710">'</span></span>: path, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">body</span><span style="color:#710">'</span></span>: body})
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">get_logs</span>(user_id):
+    <span style="color:#080;font-weight:bold">return</span> g.db.select(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">logs</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>: user_id})
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">get_waffles</span>():
+    <span style="color:#080;font-weight:bold">return</span> g.db.select(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffles</span><span style="color:#710">'</span></span>)
+
+<span style="color:#B0B">@app.before_request</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">before_request</span>():
+    g.db = db.DB(settings.database)
+    g.cursor = g.db.cursor
+
+<span style="color:#B0B">@app.teardown_request</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">teardown_request</span>(exception):
+    <span style="color:#080;font-weight:bold">if</span> <span style="color:#369;font-weight:bold">hasattr</span>(g, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">db</span><span style="color:#710">'</span></span>):
+        g.db.commit()
+        g.db.close()
+
+<span style="color:#B0B">@app.route</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>)
+<span style="color:#B0B">@require_authentication</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">index</span>():
+    user = session[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user</span><span style="color:#710">'</span></span>]
+    waffles = get_waffles()
+    <span style="color:#080;font-weight:bold">return</span> render_template(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">index.html</span><span style="color:#710">'</span></span>, user=user, waffles=waffles,
+                           endpoint=request.url_root)
+
+<span style="color:#B0B">@app.route</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/login</span><span style="color:#710">'</span></span>, methods=[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">GET</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">POST</span><span style="color:#710">'</span></span>])
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">login</span>():
+    error = <span style="color:#069">None</span>
+    <span style="color:#080;font-weight:bold">if</span> request.method == <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">POST</span><span style="color:#710">'</span></span>:
+        user = request.form[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">username</span><span style="color:#710">'</span></span>]
+        password = request.form[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">password</span><span style="color:#710">'</span></span>]
+        row = valid_user(user, password)
+        <span style="color:#080;font-weight:bold">if</span> row:
+            log_in(user, row)
+            <span style="color:#080;font-weight:bold">return</span> redirect(absolute_url(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>))
+        <span style="color:#080;font-weight:bold">else</span>:
+            error = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Invalid username or password</span><span style="color:#710">'</span></span>
+
+    <span style="color:#080;font-weight:bold">return</span> render_template(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">login.html</span><span style="color:#710">'</span></span>, error=error)
+
+<span style="color:#B0B">@app.route</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/logs/&lt;int:id&gt;</span><span style="color:#710">'</span></span>)
+<span style="color:#B0B">@require_authentication</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">logs</span>(<span style="color:#369;font-weight:bold">id</span>):
+    rows = get_logs(<span style="color:#369;font-weight:bold">id</span>)
+    <span style="color:#080;font-weight:bold">return</span> render_template(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">logs.html</span><span style="color:#710">'</span></span>, logs=rows)
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">verify_signature</span>(user_id, sig, raw_params):
+    <span style="color:#777"># get secret token for user_id</span>
+    <span style="color:#080;font-weight:bold">try</span>:
+        row = g.db.select_one(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">users</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">id</span><span style="color:#710">'</span></span>: user_id})
+    <span style="color:#080;font-weight:bold">except</span> db.NotFound:
+        <span style="color:#080;font-weight:bold">raise</span> BadSignature(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">no such user_id</span><span style="color:#710">'</span></span>)
+    secret = <span style="color:#369;font-weight:bold">str</span>(row[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">secret</span><span style="color:#710">'</span></span>])
+
+    h = hashlib.sha1()
+    h.update(secret + raw_params)
+    <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">computed signature</span><span style="color:#710">'</span></span>, h.hexdigest(), <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">for body</span><span style="color:#710">'</span></span>, <span style="color:#369;font-weight:bold">repr</span>(raw_params)
+    <span style="color:#080;font-weight:bold">if</span> h.hexdigest() != sig:
+        <span style="color:#080;font-weight:bold">raise</span> BadSignature(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">signature does not match</span><span style="color:#710">'</span></span>)
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">True</span>
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">parse_params</span>(raw_params):
+    pairs = raw_params.split(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&amp;</span><span style="color:#710">'</span></span>)
+    params = {}
+    <span style="color:#080;font-weight:bold">for</span> pair <span style="color:#080;font-weight:bold">in</span> pairs:
+        key, val = pair.split(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">=</span><span style="color:#710">'</span></span>)
+        key = urllib.unquote_plus(key)
+        val = urllib.unquote_plus(val)
+        params[key] = val
+    <span style="color:#080;font-weight:bold">return</span> params
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">parse_post_body</span>(body):
+    <span style="color:#080;font-weight:bold">try</span>:
+        raw_params, sig = body.strip(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#b0b">\n</span><span style="color:#710">'</span></span>).rsplit(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">|sig:</span><span style="color:#710">'</span></span>, <span style="color:#00D">1</span>)
+    <span style="color:#080;font-weight:bold">except</span> <span style="color:#C00;font-weight:bold">ValueError</span>:
+        <span style="color:#080;font-weight:bold">raise</span> BadRequest(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Request must be of form params|sig:da39a3ee5e6b...</span><span style="color:#710">'</span></span>)
+
+    <span style="color:#080;font-weight:bold">return</span> raw_params, sig
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">process_order</span>(params):
+    user = g.db.select_one(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">users</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">id</span><span style="color:#710">'</span></span>: params[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>]})
+
+    <span style="color:#777"># collect query parameters</span>
+    <span style="color:#080;font-weight:bold">try</span>:
+        waffle_name = params[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffle</span><span style="color:#710">'</span></span>]
+    <span style="color:#080;font-weight:bold">except</span> <span style="color:#C00;font-weight:bold">KeyError</span>:
+        <span style="color:#080;font-weight:bold">return</span> json_error(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">must specify waffle</span><span style="color:#710">'</span></span>, <span style="color:#00D">400</span>)
+    <span style="color:#080;font-weight:bold">try</span>:
+        count = <span style="color:#369;font-weight:bold">int</span>(params[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">count</span><span style="color:#710">'</span></span>])
+    <span style="color:#080;font-weight:bold">except</span> (<span style="color:#C00;font-weight:bold">KeyError</span>, <span style="color:#C00;font-weight:bold">ValueError</span>):
+        <span style="color:#080;font-weight:bold">return</span> json_error(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">must specify count</span><span style="color:#710">'</span></span>, <span style="color:#00D">400</span>)
+    <span style="color:#080;font-weight:bold">try</span>:
+        lat, long = <span style="color:#369;font-weight:bold">float</span>(params[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">lat</span><span style="color:#710">'</span></span>]), <span style="color:#369;font-weight:bold">float</span>(params[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">long</span><span style="color:#710">'</span></span>])
+    <span style="color:#080;font-weight:bold">except</span> (<span style="color:#C00;font-weight:bold">KeyError</span>, <span style="color:#C00;font-weight:bold">ValueError</span>):
+        <span style="color:#080;font-weight:bold">return</span> json_error(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">where would you like your waffle today?</span><span style="color:#710">'</span></span>, <span style="color:#00D">400</span>)
+
+    <span style="color:#080;font-weight:bold">if</span> count &lt; <span style="color:#00D">1</span>:
+        <span style="color:#080;font-weight:bold">return</span> json_error(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">count must be &gt;= 1</span><span style="color:#710">'</span></span>, <span style="color:#00D">400</span>)
+
+    <span style="color:#777"># get waffle info</span>
+    <span style="color:#080;font-weight:bold">try</span>:
+        waffle = g.db.select_one(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffles</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">name</span><span style="color:#710">'</span></span>: waffle_name})
+    <span style="color:#080;font-weight:bold">except</span> db.NotFound:
+        <span style="color:#080;font-weight:bold">return</span> json_error(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">no such waffle: %s</span><span style="color:#710">'</span></span> % waffle_name, <span style="color:#00D">404</span>)
+
+    <span style="color:#777"># check premium status</span>
+    <span style="color:#080;font-weight:bold">if</span> waffle[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">premium</span><span style="color:#710">'</span></span>] <span style="color:#080;font-weight:bold">and</span> <span style="color:#080;font-weight:bold">not</span> user[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">premium</span><span style="color:#710">'</span></span>]:
+        <span style="color:#080;font-weight:bold">return</span> json_error(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">that waffle requires a premium subscription</span><span style="color:#710">'</span></span>, <span style="color:#00D">402</span>)
+
+    <span style="color:#777"># return results</span>
+    plural = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">s</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">if</span> count &gt; <span style="color:#00D">1</span> <span style="color:#080;font-weight:bold">else</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>
+    msg = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Great news: %d %s waffle%s will soon be flying your way!</span><span style="color:#710">'</span></span> \
+        % (count, waffle_name, plural)
+    <span style="color:#080;font-weight:bold">return</span> json_response({<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">success</span><span style="color:#710">'</span></span>: <span style="color:#069">True</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">message</span><span style="color:#710">'</span></span>: msg,
+                          <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">confirm_code</span><span style="color:#710">'</span></span>: waffle[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">confirm</span><span style="color:#710">'</span></span>]})
+
+<span style="color:#B0B">@app.route</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/orders</span><span style="color:#710">'</span></span>, methods=[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">POST</span><span style="color:#710">'</span></span>])
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">order</span>():
+    <span style="color:#777"># We need the original POST body in order to check the hash, so we use</span>
+    <span style="color:#777"># request.input_stream rather than request.form.</span>
+    request.shallow = <span style="color:#069">True</span>
+    body = request.input_stream.read(
+        request.headers.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">content-length</span><span style="color:#710">'</span></span>, type=<span style="color:#369;font-weight:bold">int</span>) <span style="color:#080;font-weight:bold">or</span> <span style="color:#00D">0</span>)
+
+    <span style="color:#777"># parse POST body</span>
+    <span style="color:#080;font-weight:bold">try</span>:
+        raw_params, sig = parse_post_body(body)
+    <span style="color:#080;font-weight:bold">except</span> BadRequest, e:
+        <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">failed to parse</span><span style="color:#710">'</span></span>, <span style="color:#369;font-weight:bold">repr</span>(body)
+        <span style="color:#080;font-weight:bold">return</span> json_error(e.message, <span style="color:#00D">400</span>)
+
+    <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">raw_params:</span><span style="color:#710">'</span></span>, <span style="color:#369;font-weight:bold">repr</span>(raw_params)
+
+    <span style="color:#080;font-weight:bold">try</span>:
+        params = parse_params(raw_params)
+    <span style="color:#080;font-weight:bold">except</span> <span style="color:#C00;font-weight:bold">ValueError</span>:
+        <span style="color:#080;font-weight:bold">raise</span> BadRequest(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Could not parse params</span><span style="color:#710">'</span></span>)
+
+    <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">sig:</span><span style="color:#710">'</span></span>, <span style="color:#369;font-weight:bold">repr</span>(sig)
+
+    <span style="color:#777"># look for user_id and signature</span>
+    <span style="color:#080;font-weight:bold">try</span>:
+        user_id = params[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>]
+    <span style="color:#080;font-weight:bold">except</span> <span style="color:#C00;font-weight:bold">KeyError</span>:
+        <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id not provided</span><span style="color:#710">'</span></span>
+        <span style="color:#080;font-weight:bold">return</span> json_error(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">must provide user_id</span><span style="color:#710">'</span></span>, <span style="color:#00D">401</span>)
+
+    <span style="color:#777"># check that signature matches</span>
+    <span style="color:#080;font-weight:bold">try</span>:
+        verify_signature(user_id, sig, raw_params)
+    <span style="color:#080;font-weight:bold">except</span> BadSignature, e:
+        <span style="color:#080;font-weight:bold">return</span> json_error(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">signature check failed: </span><span style="color:#710">'</span></span> + e.message, <span style="color:#00D">401</span>)
+
+    <span style="color:#777"># all OK -- process the order</span>
+    log_api_request(params[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>], <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/orders</span><span style="color:#710">'</span></span>, body)
+    <span style="color:#080;font-weight:bold">return</span> process_order(params)
+
+<span style="color:#080;font-weight:bold">if</span> __name__ == <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">__main__</span><span style="color:#710">'</span></span>:
+    app.run(host=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">0.0.0.0</span><span style="color:#710">'</span></span>, port=<span style="color:#00D">9233</span>)
+
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p>The contents of <code>db.py</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+<a href="#n57" name="n57">57</a>
+<a href="#n58" name="n58">58</a>
+<a href="#n59" name="n59">59</a>
+<strong><a href="#n60" name="n60">60</a></strong>
+<a href="#n61" name="n61">61</a>
+<a href="#n62" name="n62">62</a>
+<a href="#n63" name="n63">63</a>
+<a href="#n64" name="n64">64</a>
+<a href="#n65" name="n65">65</a>
+<a href="#n66" name="n66">66</a>
+<a href="#n67" name="n67">67</a>
+<a href="#n68" name="n68">68</a>
+<a href="#n69" name="n69">69</a>
+<strong><a href="#n70" name="n70">70</a></strong>
+<a href="#n71" name="n71">71</a>
+<a href="#n72" name="n72">72</a>
+<a href="#n73" name="n73">73</a>
+<a href="#n74" name="n74">74</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">os</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sqlite3</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sys</span>
+
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">NotFound</span>(<span style="color:#C00;font-weight:bold">Exception</span>):
+    <span style="color:#080;font-weight:bold">pass</span>
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">ManyFound</span>(<span style="color:#C00;font-weight:bold">Exception</span>):
+    <span style="color:#080;font-weight:bold">pass</span>
+
+<span style="color:#777"># for app.secret_key</span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">rewrite_entropy_file</span>(path):
+    f = <span style="color:#369;font-weight:bold">open</span>(path, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">w</span><span style="color:#710">'</span></span>)
+    f.write(os.urandom(<span style="color:#00D">24</span>))
+    f.close()
+
+<span style="color:#080;font-weight:bold">class</span> <span style="color:#B06;font-weight:bold">DB</span>(<span style="color:#369;font-weight:bold">object</span>):
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">__init__</span>(<span style="color:#069">self</span>, database):
+        <span style="color:#069">self</span>.conn = sqlite3.connect(database,
+                                    detect_types=sqlite3.PARSE_DECLTYPES)
+        <span style="color:#069">self</span>.conn.row_factory = sqlite3.Row
+        <span style="color:#069">self</span>.cursor = <span style="color:#069">self</span>.conn.cursor()
+        <span style="color:#069">self</span>.debug = <span style="color:#069">False</span>
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">log</span>(<span style="color:#069">self</span>, *args):
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#069">self</span>.debug:
+            <span style="color:#080;font-weight:bold">for</span> i <span style="color:#080;font-weight:bold">in</span> args:
+                sys.stderr.write(<span style="color:#369;font-weight:bold">str</span>(i))
+            sys.stderr.write(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#b0b">\n</span><span style="color:#710">'</span></span>)
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">commit</span>(<span style="color:#069">self</span>):
+        <span style="color:#069">self</span>.conn.commit()
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">close</span>(<span style="color:#069">self</span>):
+        <span style="color:#069">self</span>.cursor.close()
+        <span style="color:#069">self</span>.conn.close()
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">select</span>(<span style="color:#069">self</span>, table, where=<span style="color:#069">None</span>):
+        <span style="color:#080;font-weight:bold">if</span> where <span style="color:#080;font-weight:bold">is</span> <span style="color:#069">None</span>:
+            where = {}
+        <span style="color:#069">self</span>.do_select(table, where)
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#369;font-weight:bold">map</span>(<span style="color:#369;font-weight:bold">dict</span>, <span style="color:#069">self</span>.cursor.fetchall())
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">select_one</span>(<span style="color:#069">self</span>, table, where=<span style="color:#069">None</span>):
+        where = where <span style="color:#080;font-weight:bold">or</span> {}
+        <span style="color:#069">self</span>.do_select(table, where)
+
+        row = <span style="color:#069">self</span>.cursor.fetchone()
+        <span style="color:#080;font-weight:bold">if</span> row <span style="color:#080;font-weight:bold">is</span> <span style="color:#069">None</span>:
+            <span style="color:#080;font-weight:bold">raise</span> NotFound
+
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#069">self</span>.cursor.fetchone() <span style="color:#080;font-weight:bold">is</span> <span style="color:#080;font-weight:bold">not</span> <span style="color:#069">None</span>:
+            <span style="color:#080;font-weight:bold">raise</span> ManyFound
+
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#369;font-weight:bold">dict</span>(row)
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">do_select</span>(<span style="color:#069">self</span>, table, where=<span style="color:#069">None</span>):
+        where = where <span style="color:#080;font-weight:bold">or</span> {}
+        where_clause = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20"> AND </span><span style="color:#710">'</span></span>.join(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">%s=?</span><span style="color:#710">'</span></span> % key <span style="color:#080;font-weight:bold">for</span> key <span style="color:#080;font-weight:bold">in</span> where.iterkeys())
+        values = where.values()
+        q = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">select * from </span><span style="color:#710">'</span></span> + <span style="color:#369;font-weight:bold">str</span>(table)
+        <span style="color:#080;font-weight:bold">if</span> where_clause:
+            q += <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20"> where </span><span style="color:#710">'</span></span> + where_clause
+        <span style="color:#069">self</span>.log(q, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&lt;==</span><span style="color:#710">'</span></span>, values)
+        <span style="color:#069">self</span>.cursor.execute(q, values)
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">insert</span>(<span style="color:#069">self</span>, table, data):
+        cols = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">, </span><span style="color:#710">'</span></span>.join(data.keys())
+        vals = data.values()
+        placeholders = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">, </span><span style="color:#710">'</span></span>.join(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">?</span><span style="color:#710">'</span></span> <span style="color:#080;font-weight:bold">for</span> i <span style="color:#080;font-weight:bold">in</span> data)
+        q = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">insert into %s (%s) values (%s)</span><span style="color:#710">'</span></span> % (table, cols, placeholders)
+        <span style="color:#069">self</span>.log(q, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">&lt;==</span><span style="color:#710">'</span></span>, vals)
+        <span style="color:#069">self</span>.cursor.execute(q, vals)
+        <span style="color:#069">self</span>.commit()
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#069">self</span>.cursor.rowcount
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p>The contents of <code>settings.py</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">os</span>
+
+DEBUG = <span style="color:#069">False</span>
+database = os.path.join(os.path.dirname(__file__), <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">wafflecopter.db</span><span style="color:#710">'</span></span>)
+entropy_file = os.path.join(os.path.dirname(__file__), <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">entropy.dat</span><span style="color:#710">'</span></span>)
+
+url_root = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>
+
+<span style="color:#080;font-weight:bold">try</span>:
+    <span style="color:#080;font-weight:bold">from</span> <span style="color:#B44;font-weight:bold">local_settings</span> <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">*</span>
+<span style="color:#080;font-weight:bold">except</span> <span style="color:#C00;font-weight:bold">ImportError</span>:
+    <span style="color:#080;font-weight:bold">pass</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p>The contents of <code>initialize_db.py</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+<a href="#n57" name="n57">57</a>
+<a href="#n58" name="n58">58</a>
+<a href="#n59" name="n59">59</a>
+<strong><a href="#n60" name="n60">60</a></strong>
+<a href="#n61" name="n61">61</a>
+<a href="#n62" name="n62">62</a>
+<a href="#n63" name="n63">63</a>
+<a href="#n64" name="n64">64</a>
+<a href="#n65" name="n65">65</a>
+<a href="#n66" name="n66">66</a>
+<a href="#n67" name="n67">67</a>
+<a href="#n68" name="n68">68</a>
+<a href="#n69" name="n69">69</a>
+<strong><a href="#n70" name="n70">70</a></strong>
+<a href="#n71" name="n71">71</a>
+<a href="#n72" name="n72">72</a>
+<a href="#n73" name="n73">73</a>
+<a href="#n74" name="n74">74</a>
+<a href="#n75" name="n75">75</a>
+<a href="#n76" name="n76">76</a>
+<a href="#n77" name="n77">77</a>
+<a href="#n78" name="n78">78</a>
+<a href="#n79" name="n79">79</a>
+<strong><a href="#n80" name="n80">80</a></strong>
+<a href="#n81" name="n81">81</a>
+<a href="#n82" name="n82">82</a>
+<a href="#n83" name="n83">83</a>
+<a href="#n84" name="n84">84</a>
+<a href="#n85" name="n85">85</a>
+<a href="#n86" name="n86">86</a>
+<a href="#n87" name="n87">87</a>
+<a href="#n88" name="n88">88</a>
+<a href="#n89" name="n89">89</a>
+<strong><a href="#n90" name="n90">90</a></strong>
+<a href="#n91" name="n91">91</a>
+<a href="#n92" name="n92">92</a>
+<a href="#n93" name="n93">93</a>
+<a href="#n94" name="n94">94</a>
+<a href="#n95" name="n95">95</a>
+<a href="#n96" name="n96">96</a>
+<a href="#n97" name="n97">97</a>
+<a href="#n98" name="n98">98</a>
+<a href="#n99" name="n99">99</a>
+<strong><a href="#n100" name="n100">100</a></strong>
+<a href="#n101" name="n101">101</a>
+<a href="#n102" name="n102">102</a>
+<a href="#n103" name="n103">103</a>
+<a href="#n104" name="n104">104</a>
+<a href="#n105" name="n105">105</a>
+<a href="#n106" name="n106">106</a>
+<a href="#n107" name="n107">107</a>
+<a href="#n108" name="n108">108</a>
+<a href="#n109" name="n109">109</a>
+<strong><a href="#n110" name="n110">110</a></strong>
+<a href="#n111" name="n111">111</a>
+<a href="#n112" name="n112">112</a>
+<a href="#n113" name="n113">113</a>
+<a href="#n114" name="n114">114</a>
+<a href="#n115" name="n115">115</a>
+<a href="#n116" name="n116">116</a>
+<a href="#n117" name="n117">117</a>
+<a href="#n118" name="n118">118</a>
+<a href="#n119" name="n119">119</a>
+<strong><a href="#n120" name="n120">120</a></strong>
+<a href="#n121" name="n121">121</a>
+<a href="#n122" name="n122">122</a>
+<a href="#n123" name="n123">123</a>
+<a href="#n124" name="n124">124</a>
+<a href="#n125" name="n125">125</a>
+<a href="#n126" name="n126">126</a>
+<a href="#n127" name="n127">127</a>
+<a href="#n128" name="n128">128</a>
+<a href="#n129" name="n129">129</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#777">#!/usr/bin/env python</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sys</span>
+<span style="color:#080;font-weight:bold">from</span> <span style="color:#B44;font-weight:bold">datetime</span> <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">datetime</span>
+<span style="color:#080;font-weight:bold">from</span> <span style="color:#B44;font-weight:bold">random</span> <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">SystemRandom</span>
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">bcrypt</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sqlite3</span>
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">client</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">db</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">settings</span>
+
+conn = db.DB(settings.database)
+conn.debug = <span style="color:#069">True</span>
+c = conn.cursor
+
+db.rewrite_entropy_file(settings.entropy_file)
+
+rand = SystemRandom()
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">rand_choice</span>(alphabet, length):
+    <span style="color:#080;font-weight:bold">return</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#710">'</span></span>.join(rand.choice(alphabet) <span style="color:#080;font-weight:bold">for</span> i <span style="color:#080;font-weight:bold">in</span> <span style="color:#369;font-weight:bold">range</span>(length))
+
+alphanum = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</span><span style="color:#710">'</span></span>
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">rand_alnum</span>(length):
+    <span style="color:#080;font-weight:bold">return</span> rand_choice(alphanum, length)
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">main</span>(level_password):
+    create_tables()
+    add_users()
+    add_waffles(level_password)
+    add_logs()
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_users</span>():
+    add_user(<span style="color:#00D">1</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">larry</span><span style="color:#710">'</span></span>, rand_alnum(<span style="color:#00D">16</span>), <span style="color:#00D">1</span>)
+    add_user(<span style="color:#00D">2</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">randall</span><span style="color:#710">'</span></span>, rand_alnum(<span style="color:#00D">16</span>), <span style="color:#00D">1</span>)
+    add_user(<span style="color:#00D">3</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">alice</span><span style="color:#710">'</span></span>, rand_alnum(<span style="color:#00D">16</span>), <span style="color:#00D">0</span>)
+    add_user(<span style="color:#00D">4</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">bob</span><span style="color:#710">'</span></span>, rand_alnum(<span style="color:#00D">16</span>), <span style="color:#00D">0</span>)
+    add_user(<span style="color:#00D">5</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">ctf</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">password</span><span style="color:#710">'</span></span>, <span style="color:#00D">0</span>)
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_waffles</span>(level_password):
+    add_waffle(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">liege</span><span style="color:#710">'</span></span>, <span style="color:#00D">1</span>, level_password)
+    add_waffle(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">dream</span><span style="color:#710">'</span></span>, <span style="color:#00D">1</span>, rand_alnum(<span style="color:#00D">14</span>))
+    add_waffle(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">veritaffle</span><span style="color:#710">'</span></span>, <span style="color:#00D">0</span>, rand_alnum(<span style="color:#00D">14</span>))
+    add_waffle(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">chicken</span><span style="color:#710">'</span></span>, <span style="color:#00D">1</span>, rand_alnum(<span style="color:#00D">14</span>))
+    add_waffle(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">belgian</span><span style="color:#710">'</span></span>, <span style="color:#00D">0</span>, rand_alnum(<span style="color:#00D">14</span>))
+    add_waffle(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">brussels</span><span style="color:#710">'</span></span>, <span style="color:#00D">0</span>, rand_alnum(<span style="color:#00D">14</span>))
+    add_waffle(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">eggo</span><span style="color:#710">'</span></span>, <span style="color:#00D">0</span>, rand_alnum(<span style="color:#00D">14</span>))
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_logs</span>():
+    gen_log(<span style="color:#00D">1</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/orders</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffle</span><span style="color:#710">'</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">eggo</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">count</span><span style="color:#710">'</span></span>: <span style="color:#00D">10</span>,
+                           <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">lat</span><span style="color:#710">'</span></span>: <span style="color:#60E">37.351</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">long</span><span style="color:#710">'</span></span>: -<span style="color:#60E">119.827</span>})
+    gen_log(<span style="color:#00D">1</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/orders</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffle</span><span style="color:#710">'</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">chicken</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">count</span><span style="color:#710">'</span></span>: <span style="color:#00D">2</span>,
+                           <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">lat</span><span style="color:#710">'</span></span>: <span style="color:#60E">37.351</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">long</span><span style="color:#710">'</span></span>: -<span style="color:#60E">119.827</span>})
+    gen_log(<span style="color:#00D">2</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/orders</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffle</span><span style="color:#710">'</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">dream</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">count</span><span style="color:#710">'</span></span>: <span style="color:#00D">2</span>,
+                           <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">lat</span><span style="color:#710">'</span></span>: <span style="color:#60E">42.39561</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">long</span><span style="color:#710">'</span></span>: -<span style="color:#60E">71.13051</span>},
+            date=datetime(<span style="color:#00D">2007</span>, <span style="color:#00D">9</span>, <span style="color:#00D">23</span>, <span style="color:#00D">14</span>, <span style="color:#00D">38</span>, <span style="color:#40E">00</span>))
+    gen_log(<span style="color:#00D">3</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/orders</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffle</span><span style="color:#710">'</span></span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">veritaffle</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">count</span><span style="color:#710">'</span></span>: <span style="color:#00D">1</span>,
+                           <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">lat</span><span style="color:#710">'</span></span>: <span style="color:#60E">42.376</span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">long</span><span style="color:#710">'</span></span>: -<span style="color:#60E">71.116</span>})
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">create_tables</span>():
+    c.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">drop table if exists users</span><span style="color:#710">'</span></span>)
+    c.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'''</span><span style="color:#D20">
+</span><span style="color:#D20">    CREATE TABLE users(</span><span style="color:#D20">
+</span><span style="color:#D20">    id int not null primary key,</span><span style="color:#D20">
+</span><span style="color:#D20">    name varchar(255) not null,</span><span style="color:#D20">
+</span><span style="color:#D20">    password varchar(255) not null,</span><span style="color:#D20">
+</span><span style="color:#D20">    premium int not null,</span><span style="color:#D20">
+</span><span style="color:#D20">    secret varchar(255) not null,</span><span style="color:#D20">
+</span><span style="color:#D20">    unique (name)</span><span style="color:#D20">
+</span><span style="color:#D20">    )</span><span style="color:#D20">
+</span><span style="color:#D20">    </span><span style="color:#710">'''</span></span>)
+
+    c.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">drop table if exists waffles</span><span style="color:#710">'</span></span>)
+    c.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'''</span><span style="color:#D20">
+</span><span style="color:#D20">    CREATE TABLE waffles(</span><span style="color:#D20">
+</span><span style="color:#D20">    name varchar(255) not null primary key,</span><span style="color:#D20">
+</span><span style="color:#D20">    premium int not null,</span><span style="color:#D20">
+</span><span style="color:#D20">    confirm varchar(255) not null</span><span style="color:#D20">
+</span><span style="color:#D20">    )</span><span style="color:#D20">
+</span><span style="color:#D20">    </span><span style="color:#710">'''</span></span>)
+
+    c.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">drop table if exists logs</span><span style="color:#710">'</span></span>)
+    c.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'''</span><span style="color:#D20">
+</span><span style="color:#D20">    CREATE TABLE logs(</span><span style="color:#D20">
+</span><span style="color:#D20">    user_id int not null,</span><span style="color:#D20">
+</span><span style="color:#D20">    path varchar(255) not null,</span><span style="color:#D20">
+</span><span style="color:#D20">    body text not null,</span><span style="color:#D20">
+</span><span style="color:#D20">    date timestamp not null default current_timestamp</span><span style="color:#D20">
+</span><span style="color:#D20">    )</span><span style="color:#D20">
+</span><span style="color:#D20">    </span><span style="color:#710">'''</span></span>)
+    c.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">create index user_id on logs (user_id)</span><span style="color:#710">'</span></span>)
+    c.execute(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">create index date on logs (date)</span><span style="color:#710">'</span></span>)
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_user</span>(uid, username, password, premium):
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt(<span style="color:#00D">10</span>))
+    secret = rand_alnum(<span style="color:#00D">14</span>)
+    data = {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">id</span><span style="color:#710">'</span></span>: uid, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">name</span><span style="color:#710">'</span></span>: username, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">password</span><span style="color:#710">'</span></span>: hashed,
+            <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">premium</span><span style="color:#710">'</span></span>: premium, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">secret</span><span style="color:#710">'</span></span>: secret}
+    conn.insert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">users</span><span style="color:#710">'</span></span>, data)
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">get_user</span>(uid):
+    <span style="color:#080;font-weight:bold">return</span> conn.select_one(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">users</span><span style="color:#710">'</span></span>, {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">id</span><span style="color:#710">'</span></span>: uid})
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">add_waffle</span>(name, premium, confirm):
+    data = {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">name</span><span style="color:#710">'</span></span>: name, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">premium</span><span style="color:#710">'</span></span>: premium, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">confirm</span><span style="color:#710">'</span></span>: confirm}
+    conn.insert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">waffles</span><span style="color:#710">'</span></span>, data)
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">gen_log</span>(user_id, path, params, date=<span style="color:#069">None</span>):
+    user = get_user(user_id)
+
+    <span style="color:#777"># generate signature using client library</span>
+    cl = client.Client(<span style="color:#069">None</span>, user_id, user[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">secret</span><span style="color:#710">'</span></span>])
+    body = cl._make_post(params)
+
+    <span style="color:#777"># prepare data for insert</span>
+    data = {<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>: user_id, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">path</span><span style="color:#710">'</span></span>: path, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">body</span><span style="color:#710">'</span></span>: body}
+
+    <span style="color:#080;font-weight:bold">if</span> date:
+        data[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">date</span><span style="color:#710">'</span></span>] = date
+
+    conn.insert(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">logs</span><span style="color:#710">'</span></span>, data)
+
+<span style="color:#080;font-weight:bold">if</span> __name__ == <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">__main__</span><span style="color:#710">'</span></span>:
+    <span style="color:#080;font-weight:bold">if</span> <span style="color:#369;font-weight:bold">len</span>(sys.argv) &lt; <span style="color:#00D">2</span>:
+        <span style="color:#080;font-weight:bold">print</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">usage: initialize_db.py LEVEL_PASSWORD</span><span style="color:#710">'</span></span>
+        sys.exit(<span style="color:#00D">1</span>)
+
+    main(sys.argv[<span style="color:#00D">1</span>])
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p>The contents of <code>templates/index.html</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#F00;background-color:#FAA">&lt;</span>!doctype html<span style="color:#F00;background-color:#FAA">&gt;</span>
+<span style="color:#070">&lt;html&gt;</span>
+  <span style="color:#070">&lt;head&gt;</span>
+    <span style="color:#070">&lt;title&gt;</span>WaffleCopter<span style="color:#070">&lt;/title&gt;</span>
+    <span style="color:#070">&lt;style&gt;</span>
+      a {
+        color: black;
+      }
+      a:hover {
+        color: blue;
+      }
+    <span style="color:#070">&lt;/style&gt;</span>
+  <span style="color:#070">&lt;/head&gt;</span>
+  <span style="color:#070">&lt;body&gt;</span>
+    <span style="color:#070">&lt;h1&gt;</span>WaffleCopter [beta]<span style="color:#070">&lt;/h1&gt;</span>
+    <span style="color:#070">&lt;p&gt;</span>Welcome, {{user['name']}}!<span style="color:#070">&lt;/p&gt;</span>
+    <span style="color:#070">&lt;h3&gt;</span>Your API credentials<span style="color:#070">&lt;/h3&gt;</span>
+    <span style="color:#070">&lt;ul&gt;</span>
+      <span style="color:#070">&lt;li&gt;</span><span style="color:#070">&lt;strong&gt;</span>endpoint:<span style="color:#070">&lt;/strong&gt;</span> <span style="color:#070">&lt;code&gt;</span>{{ endpoint }}<span style="color:#070">&lt;/code&gt;</span><span style="color:#070">&lt;/li&gt;</span>
+      <span style="color:#070">&lt;li&gt;</span><span style="color:#070">&lt;strong&gt;</span>user_id:<span style="color:#070">&lt;/strong&gt;</span> <span style="color:#070">&lt;code&gt;</span>{{ user['id'] }}<span style="color:#070">&lt;/code&gt;</span><span style="color:#070">&lt;/li&gt;</span>
+      <span style="color:#070">&lt;li&gt;</span><span style="color:#070">&lt;strong&gt;</span>secret:<span style="color:#070">&lt;/strong&gt;</span> <span style="color:#070">&lt;code&gt;</span>{{ user['secret'] }}<span style="color:#070">&lt;/code&gt;</span><span style="color:#070">&lt;/li&gt;</span>
+    <span style="color:#070">&lt;/ul&gt;</span>
+    <span style="color:#070">&lt;h3&gt;</span>Available waffles<span style="color:#070">&lt;/h3&gt;</span>
+    <span style="color:#070">&lt;ul&gt;</span>
+      {% for waffle in waffles %}
+      <span style="color:#070">&lt;li&gt;</span>
+        {{ waffle['name'] }}{% if waffle['premium'] %} (premium){% endif %}
+      <span style="color:#070">&lt;/li&gt;</span>
+      {% endfor %}
+    <span style="color:#070">&lt;/ul&gt;</span>
+    <span style="color:#070">&lt;h3&gt;</span><span style="color:#070">&lt;a</span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">./logs/{{ user['id'] }}</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>API Request logs<span style="color:#070">&lt;/a&gt;</span><span style="color:#070">&lt;/h3&gt;</span>
+  <span style="color:#070">&lt;/body&gt;</span>
+<span style="color:#070">&lt;/html&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p>The contents of <code>templates/login.html</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#F00;background-color:#FAA">&lt;</span>!doctype html<span style="color:#F00;background-color:#FAA">&gt;</span>
+<span style="color:#070">&lt;html&gt;</span>
+  <span style="color:#070">&lt;head&gt;</span>
+    <span style="color:#070">&lt;title&gt;</span>WaffleCopter - Login<span style="color:#070">&lt;/title&gt;</span>
+  <span style="color:#070">&lt;/head&gt;</span>
+  <span style="color:#070">&lt;body&gt;</span>
+    <span style="color:#070">&lt;h1&gt;</span>WaffleCopter [beta]<span style="color:#070">&lt;/h1&gt;</span>
+    {% if error %}
+    <span style="color:#070">&lt;p</span> <span style="color:#b48">style</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">color: red</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>{{ error }}<span style="color:#070">&lt;/p&gt;</span>
+    {% endif %}
+    <span style="color:#070">&lt;form</span> <span style="color:#b48">action</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">./login</span><span style="color:#710">"</span></span> <span style="color:#b48">method</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">post</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+      <span style="color:#070">&lt;table&gt;</span>
+        <span style="color:#070">&lt;tr&gt;</span>
+          <span style="color:#070">&lt;td&gt;</span>username:<span style="color:#070">&lt;/td&gt;</span><span style="color:#070">&lt;td&gt;</span><span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">text</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">username</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/td&gt;</span>
+        <span style="color:#070">&lt;/tr&gt;</span>
+        <span style="color:#070">&lt;tr&gt;</span>
+          <span style="color:#070">&lt;td&gt;</span>password:<span style="color:#070">&lt;/td&gt;</span><span style="color:#070">&lt;td&gt;</span><span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/td&gt;</span>
+        <span style="color:#070">&lt;/tr&gt;</span>
+        <span style="color:#070">&lt;tr&gt;</span>
+          <span style="color:#070">&lt;td</span> <span style="color:#b48">colspan</span>=<span style="color:#700">2</span><span style="color:#070">&gt;</span><span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">submit</span><span style="color:#710">"</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">log in</span><span style="color:#710">"</span></span> <span style="color:#070">/&gt;</span><span style="color:#070">&lt;/td&gt;</span>
+        <span style="color:#070">&lt;/tr&gt;</span>
+      <span style="color:#070">&lt;/table&gt;</span>
+    <span style="color:#070">&lt;/form&gt;</span>
+  <span style="color:#070">&lt;/body&gt;</span>
+<span style="color:#070">&lt;/html&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p>The contents of <code>templates/logs.html</code>:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#F00;background-color:#FAA">&lt;</span>!doctype html<span style="color:#F00;background-color:#FAA">&gt;</span>
+<span style="color:#070">&lt;html&gt;</span>
+  <span style="color:#070">&lt;head&gt;</span>
+    <span style="color:#070">&lt;title&gt;</span>WaffleCopter - Logs<span style="color:#070">&lt;/title&gt;</span>
+    <span style="color:#070">&lt;style</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">text/css</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+      table#logs {
+        border-collapse: collapse;
+      }
+      #logs td,th {
+        border: 1px solid #CCC;
+        padding: 5px;
+      }
+      #home {
+        text-decoration: none;
+        color: #000;
+      }
+      #home:hover {
+        color: blue;
+      }
+    <span style="color:#070">&lt;/style&gt;</span>
+  <span style="color:#070">&lt;/head&gt;</span>
+  <span style="color:#070">&lt;body&gt;</span>
+    <span style="color:#070">&lt;h1&gt;</span><span style="color:#070">&lt;a</span> <span style="color:#b48">id</span>=<span style="color:#700">home</span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">../</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>WaffleCopter [beta]<span style="color:#070">&lt;/a&gt;</span><span style="color:#070">&lt;/h1&gt;</span>
+    <span style="color:#070">&lt;h3&gt;</span>API Request Logs<span style="color:#070">&lt;/h3&gt;</span>
+    <span style="color:#070">&lt;table</span> <span style="color:#b48">id</span>=<span style="color:#700">logs</span><span style="color:#070">&gt;</span>
+      <span style="color:#070">&lt;tr&gt;</span><span style="color:#070">&lt;th&gt;</span>date<span style="color:#070">&lt;/th&gt;</span><span style="color:#070">&lt;th&gt;</span>path<span style="color:#070">&lt;/th&gt;</span><span style="color:#070">&lt;th&gt;</span>body<span style="color:#070">&lt;/th&gt;</span><span style="color:#070">&lt;/tr&gt;</span>
+      {% for log in logs %}
+      <span style="color:#070">&lt;tr&gt;</span>
+        <span style="color:#070">&lt;td&gt;</span>{{ log['date'].strftime('%F %R:%S') }}<span style="color:#070">&lt;/td&gt;</span>
+        <span style="color:#070">&lt;td&gt;</span>{{ log['path'] }}<span style="color:#070">&lt;/td&gt;</span>
+        <span style="color:#070">&lt;td&gt;</span><span style="color:#070">&lt;code&gt;</span>{{ log['body'].encode('unicode-escape') }}<span style="color:#070">&lt;/code&gt;</span><span style="color:#070">&lt;/td&gt;</span>
+      <span style="color:#070">&lt;/tr&gt;</span>
+      {% endfor %}
+    <span style="color:#070">&lt;/table&gt;</span>
+  <span style="color:#070">&lt;/body&gt;</span>
+<span style="color:#070">&lt;/html&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+{% endraw %}

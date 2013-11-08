@@ -22,7 +22,7 @@
       <script type="text/javascript">
     $(function() {
       $("td.done").click(function() {
-        window.location = "/user{{user_id}}/level" + $(this).attr("level");
+        window.location = "/test/user{{user_id}}/level" + $(this).attr("level");
         return false;
         });
       });
@@ -33,7 +33,7 @@
         <tbody>
    	    <tr>
 {% for i in range(9) %}
-            <td level="{{i}}" class="{{ 'done' if i < level}}{{ 'locked' if i > level}}{{ 'in-progress' if i == level}}"><div><a href="/user{{user_id}}/level{{i}}"><em></em> <span>{{i}}</span></a></div></td>
+            <td level="{{i}}" class="{{ 'done' if i < level}}{{ 'locked' if i > level}}{{ 'in-progress' if i == level}}"><div><a href="/test/user{{user_id}}/level{{i}}"><em></em> <span>{{i}}</span></a></div></td>
 {% endfor %}
           </tr>
         </tbody>

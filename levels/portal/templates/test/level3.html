@@ -1,0 +1,307 @@
+  <p> After the fiasco back in Level 0, management has decided to fortify the
+  Secret Safe into an unbreakable solution (kind of like <a href="http://www.oracle.com/us/technologies/linux/ubreakable-enterprise-kernel-linux-173350.html">Unbreakable
+  Linux</a>). The resulting product is Secret Vault, which is so secure
+  that it requires human intervention to add new secrets. </p>
+
+  <p> A beta version has launched with some interesting secrets
+  (including the password to access Level 4); you can check it out at
+  <b><a target="_blank" href="{{location}}:{{baseport + level}}">{{location}}:{{baseport + level}}</a></b>. As usual, you can fetch the code for the level
+  (and some sample data) via <code>git clone https://github.com/stripe-ctf/stripe-ctf-2.0/tree/master/levels/{{level}}</code>, or
+  you can read the code below. </p>
+
+  <p> The source of the server, <code>secretvault.py</code>, is:</p>
+{% raw %}
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+<a href="#n35" name="n35">35</a>
+<a href="#n36" name="n36">36</a>
+<a href="#n37" name="n37">37</a>
+<a href="#n38" name="n38">38</a>
+<a href="#n39" name="n39">39</a>
+<strong><a href="#n40" name="n40">40</a></strong>
+<a href="#n41" name="n41">41</a>
+<a href="#n42" name="n42">42</a>
+<a href="#n43" name="n43">43</a>
+<a href="#n44" name="n44">44</a>
+<a href="#n45" name="n45">45</a>
+<a href="#n46" name="n46">46</a>
+<a href="#n47" name="n47">47</a>
+<a href="#n48" name="n48">48</a>
+<a href="#n49" name="n49">49</a>
+<strong><a href="#n50" name="n50">50</a></strong>
+<a href="#n51" name="n51">51</a>
+<a href="#n52" name="n52">52</a>
+<a href="#n53" name="n53">53</a>
+<a href="#n54" name="n54">54</a>
+<a href="#n55" name="n55">55</a>
+<a href="#n56" name="n56">56</a>
+<a href="#n57" name="n57">57</a>
+<a href="#n58" name="n58">58</a>
+<a href="#n59" name="n59">59</a>
+<strong><a href="#n60" name="n60">60</a></strong>
+<a href="#n61" name="n61">61</a>
+<a href="#n62" name="n62">62</a>
+<a href="#n63" name="n63">63</a>
+<a href="#n64" name="n64">64</a>
+<a href="#n65" name="n65">65</a>
+<a href="#n66" name="n66">66</a>
+<a href="#n67" name="n67">67</a>
+<a href="#n68" name="n68">68</a>
+<a href="#n69" name="n69">69</a>
+<strong><a href="#n70" name="n70">70</a></strong>
+<a href="#n71" name="n71">71</a>
+<a href="#n72" name="n72">72</a>
+<a href="#n73" name="n73">73</a>
+<a href="#n74" name="n74">74</a>
+<a href="#n75" name="n75">75</a>
+<a href="#n76" name="n76">76</a>
+<a href="#n77" name="n77">77</a>
+<a href="#n78" name="n78">78</a>
+<a href="#n79" name="n79">79</a>
+<strong><a href="#n80" name="n80">80</a></strong>
+<a href="#n81" name="n81">81</a>
+<a href="#n82" name="n82">82</a>
+<a href="#n83" name="n83">83</a>
+<a href="#n84" name="n84">84</a>
+<a href="#n85" name="n85">85</a>
+<a href="#n86" name="n86">86</a>
+<a href="#n87" name="n87">87</a>
+<a href="#n88" name="n88">88</a>
+<a href="#n89" name="n89">89</a>
+<strong><a href="#n90" name="n90">90</a></strong>
+<a href="#n91" name="n91">91</a>
+<a href="#n92" name="n92">92</a>
+<a href="#n93" name="n93">93</a>
+<a href="#n94" name="n94">94</a>
+<a href="#n95" name="n95">95</a>
+<a href="#n96" name="n96">96</a>
+<a href="#n97" name="n97">97</a>
+<a href="#n98" name="n98">98</a>
+<a href="#n99" name="n99">99</a>
+<strong><a href="#n100" name="n100">100</a></strong>
+<a href="#n101" name="n101">101</a>
+<a href="#n102" name="n102">102</a>
+<a href="#n103" name="n103">103</a>
+<a href="#n104" name="n104">104</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#777">#!/usr/bin/env python</span>
+<span style="color:#777">#</span>
+<span style="color:#777"># Welcome to the Secret Safe!</span>
+<span style="color:#777">#</span>
+<span style="color:#777"># - users/users.db stores authentication info with the schema:</span>
+<span style="color:#777">#</span>
+<span style="color:#777"># CREATE TABLE users (</span>
+<span style="color:#777">#   id VARCHAR(255) PRIMARY KEY AUTOINCREMENT,</span>
+<span style="color:#777">#   username VARCHAR(255),</span>
+<span style="color:#777">#   password_hash VARCHAR(255),</span>
+<span style="color:#777">#   salt VARCHAR(255)</span>
+<span style="color:#777"># );</span>
+<span style="color:#777">#</span>
+<span style="color:#777"># - For extra security, the dictionary of secrets lives</span>
+<span style="color:#777">#   data/secrets.json (so a compromise of the database won't</span>
+<span style="color:#777">#   compromise the secrets themselves)</span>
+
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">flask</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">hashlib</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">json</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">logging</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">os</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sqlite3</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">subprocess</span>
+<span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">sys</span>
+<span style="color:#080;font-weight:bold">from</span> <span style="color:#B44;font-weight:bold">werkzeug</span> <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">debug</span>
+
+<span style="color:#777"># Generate test data when running locally</span>
+data_dir = os.path.join(os.path.dirname(__file__), <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">data</span><span style="color:#710">'</span></span>)
+<span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">not</span> os.path.exists(data_dir):
+    <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">generate_data</span>
+    os.mkdir(data_dir)
+    generate_data.main(data_dir, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">dummy-password</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">dummy-proof</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">dummy-plans</span><span style="color:#710">'</span></span>)
+
+secrets = json.load(<span style="color:#369;font-weight:bold">open</span>(os.path.join(data_dir, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">secrets.json</span><span style="color:#710">'</span></span>)))
+index_html = <span style="color:#369;font-weight:bold">open</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">index.html</span><span style="color:#710">'</span></span>).read()
+app = flask.Flask(__name__)
+
+<span style="color:#777"># Turn on backtraces, but turn off code execution (that'd be an easy level!)</span>
+app.config[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">PROPAGATE_EXCEPTIONS</span><span style="color:#710">'</span></span>] = <span style="color:#069">True</span>
+app.wsgi_app = debug.DebuggedApplication(app.wsgi_app, evalex=<span style="color:#069">False</span>)
+
+app.logger.addHandler(logging.StreamHandler(sys.stderr))
+<span style="color:#777"># use persistent entropy file for secret_key</span>
+app.secret_key = <span style="color:#369;font-weight:bold">open</span>(os.path.join(data_dir, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">entropy.dat</span><span style="color:#710">'</span></span>)).read()
+
+<span style="color:#777"># Allow setting url_root if needed</span>
+<span style="color:#080;font-weight:bold">try</span>:
+    <span style="color:#080;font-weight:bold">from</span> <span style="color:#B44;font-weight:bold">local_settings</span> <span style="color:#080;font-weight:bold">import</span> <span style="color:#B44;font-weight:bold">url_root</span>
+<span style="color:#080;font-weight:bold">except</span> <span style="color:#C00;font-weight:bold">ImportError</span>:
+    <span style="color:#080;font-weight:bold">pass</span>
+
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">absolute_url</span>(path):
+    <span style="color:#080;font-weight:bold">return</span> url_root + path
+
+<span style="color:#B0B">@app.route</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>)
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">index</span>():
+    <span style="color:#080;font-weight:bold">try</span>:
+        user_id = flask.session[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>]
+    <span style="color:#080;font-weight:bold">except</span> <span style="color:#C00;font-weight:bold">KeyError</span>:
+        <span style="color:#080;font-weight:bold">return</span> index_html
+    <span style="color:#080;font-weight:bold">else</span>:
+        secret = secrets[<span style="color:#369;font-weight:bold">str</span>(user_id)]
+        <span style="color:#080;font-weight:bold">return</span> (<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#E40">u</span><span style="color:#710">'</span><span style="color:#D20">Welcome back! Your secret is: "{0}"</span><span style="color:#710">'</span></span>.format(secret) +
+                <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#E40">u</span><span style="color:#710">'</span><span style="color:#D20"> (&lt;a href="./logout"&gt;Log out&lt;/a&gt;)</span><span style="color:#b0b">\n</span><span style="color:#710">'</span></span>)
+
+<span style="color:#B0B">@app.route</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/logout</span><span style="color:#710">'</span></span>)
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">logout</span>():
+    flask.session.pop(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>, <span style="color:#069">None</span>)
+    <span style="color:#080;font-weight:bold">return</span> flask.redirect(absolute_url(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>))
+
+<span style="color:#B0B">@app.route</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/login</span><span style="color:#710">'</span></span>, methods=[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">POST</span><span style="color:#710">'</span></span>])
+<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">login</span>():
+    username = flask.request.form.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">username</span><span style="color:#710">'</span></span>)
+    password = flask.request.form.get(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">password</span><span style="color:#710">'</span></span>)
+
+    <span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">not</span> username:
+        <span style="color:#080;font-weight:bold">return</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Must provide username</span><span style="color:#b0b">\n</span><span style="color:#710">"</span></span>
+
+    <span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">not</span> password:
+        <span style="color:#080;font-weight:bold">return</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Must provide password</span><span style="color:#b0b">\n</span><span style="color:#710">"</span></span>
+
+    conn = sqlite3.connect(os.path.join(data_dir, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">users.db</span><span style="color:#710">'</span></span>))
+    cursor = conn.cursor()
+
+    query = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"""</span><span style="color:#D20">SELECT id, password_hash, salt FROM users</span><span style="color:#D20">
+</span><span style="color:#D20">               WHERE username = '{0}' LIMIT 1</span><span style="color:#710">"""</span></span>.format(username)
+    cursor.execute(query)
+
+    res = cursor.fetchone()
+    <span style="color:#080;font-weight:bold">if</span> <span style="color:#080;font-weight:bold">not</span> res:
+        <span style="color:#080;font-weight:bold">return</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">There's no such user {0}!</span><span style="color:#b0b">\n</span><span style="color:#710">"</span></span>.format(username)
+    user_id, password_hash, salt = res
+
+    calculated_hash = hashlib.sha256(password + salt)
+    <span style="color:#080;font-weight:bold">if</span> calculated_hash.hexdigest() != password_hash:
+        <span style="color:#080;font-weight:bold">return</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">That's not the password for {0}!</span><span style="color:#b0b">\n</span><span style="color:#710">"</span></span>.format(username)
+
+    flask.session[<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">user_id</span><span style="color:#710">'</span></span>] = user_id
+    <span style="color:#080;font-weight:bold">return</span> flask.redirect(absolute_url(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/</span><span style="color:#710">'</span></span>))
+
+<span style="color:#080;font-weight:bold">if</span> __name__ == <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">__main__</span><span style="color:#710">'</span></span>:
+    <span style="color:#777"># In development: app.run(debug=True)</span>
+    app.run()
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+
+  <p> And here's <code>index.html</code>, the HTML file it's serving:</p>
+
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+<a href="#n33" name="n33">33</a>
+<a href="#n34" name="n34">34</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#070">&lt;html&gt;</span>
+  <span style="color:#070">&lt;body&gt;</span>
+    <span style="color:#070">&lt;p&gt;</span>
+      Welcome to the Secret Safe, a place to guard your most
+      precious secrets! To retreive your secrets, log in below.
+    <span style="color:#070">&lt;/p&gt;</span>
+
+    <span style="color:#070">&lt;p&gt;</span>The current users of the system store the following secrets:<span style="color:#070">&lt;/p&gt;</span>
+
+    <span style="color:#070">&lt;ul&gt;</span>
+      <span style="color:#070">&lt;li&gt;</span>bob: Stores the password to access level 04<span style="color:#070">&lt;/li&gt;</span>
+      <span style="color:#070">&lt;li&gt;</span>eve: Stores the proof that P = NP <span style="color:#070">&lt;/li&gt;</span>
+      <span style="color:#070">&lt;li&gt;</span>mallory: Stores the plans to a perpetual motion machine <span style="color:#070">&lt;/li&gt;</span>
+    <span style="color:#070">&lt;/ul&gt;</span>
+
+    <span style="color:#070">&lt;p&gt;</span>
+      You should use it too!
+      <span style="color:#070">&lt;a</span> <span style="color:#b48">href</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">http://www.youtube.com/watch?v=oHg5SJYRHA0</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>Contact us<span style="color:#070">&lt;/a&gt;</span>
+      to request a beta invite.
+    <span style="color:#070">&lt;/p&gt;</span>
+
+    <span style="color:#070">&lt;form</span> <span style="color:#b48">method</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">POST</span><span style="color:#710">"</span></span> <span style="color:#b48">action</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">./login</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+      <span style="color:#070">&lt;p&gt;</span>
+        <span style="color:#070">&lt;label</span> <span style="color:#b48">for</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">username</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>Username:<span style="color:#070">&lt;/label&gt;</span>
+        <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">text</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">username</span><span style="color:#710">"</span></span> <span style="color:#b48">id</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">username</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+      <span style="color:#070">&lt;/p&gt;</span>
+      <span style="color:#070">&lt;p&gt;</span>
+        <span style="color:#070">&lt;label</span> <span style="color:#b48">for</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>Password:<span style="color:#070">&lt;/label&gt;</span>
+        <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span> <span style="color:#b48">id</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">password</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+      <span style="color:#070">&lt;/p&gt;</span>
+      <span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">submit</span><span style="color:#710">"</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Recover your secrets now!</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+    <span style="color:#070">&lt;/form&gt;</span>
+  <span style="color:#070">&lt;/body&gt;</span>
+<span style="color:#070">&lt;/html&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+{% endraw %}

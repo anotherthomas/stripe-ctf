@@ -1,0 +1,86 @@
+  <p> Excellent, you are now on Level 1, the Guessing Game. All you
+  have to do is guess the combination correctly, and you'll be given
+  the password to access Level 2! We've been assured that this level
+  has no security vulnerabilities in it (and the machine running the
+  Guessing Game has no outbound network connectivity, meaning you
+  wouldn't be able to extract the password anyway), so you'll probably
+  just have to try all the possible combinations. Or will you...? </p>
+
+  <p> You can play the Guessing Game at <b><a target="_blank" href="{{location}}:{{baseport+1}}/1/index.php">{{location}}:{{baseport+1}}/1/index.php</a></b>. The
+  code for the Game can be obtained from <code>git clone https://github.com/stripe-ctf/stripe-ctf-2.0/tree/master/levels/{{level}}</code>, and
+  is also included below. </p>
+
+  <p> The contents of <code>index.php</code>:</p>
+{% raw %}
+  <code>
+  <table class="CodeRay"><tbody><tr>
+  <td class="line-numbers" title="double click to toggle" ondblclick="with (this.firstChild.style) { display = (display == &#39;&#39;) ? &#39;none&#39; : &#39;&#39; }"><pre><a href="#n1" name="n1">1</a>
+<a href="#n2" name="n2">2</a>
+<a href="#n3" name="n3">3</a>
+<a href="#n4" name="n4">4</a>
+<a href="#n5" name="n5">5</a>
+<a href="#n6" name="n6">6</a>
+<a href="#n7" name="n7">7</a>
+<a href="#n8" name="n8">8</a>
+<a href="#n9" name="n9">9</a>
+<strong><a href="#n10" name="n10">10</a></strong>
+<a href="#n11" name="n11">11</a>
+<a href="#n12" name="n12">12</a>
+<a href="#n13" name="n13">13</a>
+<a href="#n14" name="n14">14</a>
+<a href="#n15" name="n15">15</a>
+<a href="#n16" name="n16">16</a>
+<a href="#n17" name="n17">17</a>
+<a href="#n18" name="n18">18</a>
+<a href="#n19" name="n19">19</a>
+<strong><a href="#n20" name="n20">20</a></strong>
+<a href="#n21" name="n21">21</a>
+<a href="#n22" name="n22">22</a>
+<a href="#n23" name="n23">23</a>
+<a href="#n24" name="n24">24</a>
+<a href="#n25" name="n25">25</a>
+<a href="#n26" name="n26">26</a>
+<a href="#n27" name="n27">27</a>
+<a href="#n28" name="n28">28</a>
+<a href="#n29" name="n29">29</a>
+<strong><a href="#n30" name="n30">30</a></strong>
+<a href="#n31" name="n31">31</a>
+<a href="#n32" name="n32">32</a>
+</pre></td>
+  <td class="code"><pre><span style="color:#070">&lt;html&gt;</span>
+  <span style="color:#070">&lt;head&gt;</span>
+    <span style="color:#070">&lt;title&gt;</span>Guessing Game<span style="color:#070">&lt;/title&gt;</span>
+  <span style="color:#070">&lt;/head&gt;</span>
+  <span style="color:#070">&lt;body&gt;</span>
+    <span style="color:#070">&lt;h1&gt;</span>Welcome to the Guessing Game!<span style="color:#070">&lt;/h1&gt;</span>
+    <span style="color:#070">&lt;p&gt;</span>
+      Guess the secret combination below, and if you get it right,
+      you'll get the password to the next level!
+    <span style="color:#070">&lt;/p&gt;</span>
+    <span style="font-weight:bold;color:#666">&lt;?php</span>
+      <span style="color:#963">$filename</span> = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">secret-combination.txt</span><span style="color:#710">'</span></span>;
+      <span style="color:#369;font-weight:bold">extract</span>(<span style="color:#369;font-weight:bold">$_GET</span>);
+      <span style="color:#080;font-weight:bold">if</span> (<span style="color:#369;font-weight:bold">isset</span>(<span style="color:#963">$attempt</span>)) {
+        <span style="color:#963">$combination</span> = <span style="color:#369;font-weight:bold">trim</span>(<span style="color:#369;font-weight:bold">file_get_contents</span>(<span style="color:#963">$filename</span>));
+        <span style="color:#080;font-weight:bold">if</span> (<span style="color:#963">$attempt</span> === <span style="color:#963">$combination</span>) {
+          <span style="color:#369;font-weight:bold">echo</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;p&gt;How did you know the secret combination was</span><span style="color:#710">"</span></span> .
+               <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20"> </span><span style="color:#963">$combination</span><span style="color:#D20">!?&lt;/p&gt;</span><span style="color:#710">"</span></span>;
+          <span style="color:#963">$next</span> = <span style="color:#369;font-weight:bold">file_get_contents</span>(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">level02-password.txt</span><span style="color:#710">'</span></span>);
+          <span style="color:#369;font-weight:bold">echo</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;p&gt;You've earned the password to the access Level 2:</span><span style="color:#710">"</span></span> .
+               <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20"> </span><span style="color:#963">$next</span><span style="color:#D20">&lt;/p&gt;</span><span style="color:#710">"</span></span>;
+        } <span style="color:#080;font-weight:bold">else</span> {
+          <span style="color:#369;font-weight:bold">echo</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">&lt;p&gt;Incorrect! The secret combination is not </span><span style="color:#963">$attempt</span><span style="color:#D20">&lt;/p&gt;</span><span style="color:#710">"</span></span>;
+        }
+      }
+    <span style="font-weight:bold;color:#666">?&gt;</span>
+    <span style="color:#070">&lt;form</span> <span style="color:#b48">action</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">#</span><span style="color:#710">"</span></span> <span style="color:#b48">method</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">GET</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span>
+      <span style="color:#070">&lt;p&gt;</span><span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">text</span><span style="color:#710">"</span></span> <span style="color:#b48">name</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">attempt</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+      <span style="color:#070">&lt;p&gt;</span><span style="color:#070">&lt;input</span> <span style="color:#b48">type</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">submit</span><span style="color:#710">"</span></span> <span style="color:#b48">value</span>=<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Guess!</span><span style="color:#710">"</span></span><span style="color:#070">&gt;</span><span style="color:#070">&lt;/p&gt;</span>
+    <span style="color:#070">&lt;/form&gt;</span>
+  <span style="color:#070">&lt;/body&gt;</span>
+<span style="color:#070">&lt;/html&gt;</span>
+</pre></td>
+</tr></tbody></table>
+
+  </code>
+{% endraw %}
