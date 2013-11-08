@@ -26,10 +26,10 @@ def define_environments(baseport, number):
 def index():
     return render_template('index.html', location=location, environments=define_environments(8000, 10))
 
-@app.route('/user<int:instance>')
-@app.route('/<int:instance>')
+@app.route('/user<int:instance>/')
+@app.route('/<int:instance>/')
 def levels(instance):
-    return render_template('levels.html', location=location, baseport=instance_baseport(instance), user_id=instance)
+    return show_level(instance, 0)
 
 @app.route('/<int:instance>/nginx')
 def nginx(instance):
@@ -43,10 +43,6 @@ def supervisor(instance):
 def set_password(instance):
     pass
 
-@app.route('/user<int:instance>/level<int:level>')
-def show_level(instance, level):
-  return render_template('levels/level{0}.html'.format(level), user_id=instance, level=level, baseport=instance_baseport(instance), readme=open('static/{0}.readme'.format(level)).read())
-  
 @app.route('/readmes/<int:level>')
 def show_readme(level):
     return render_template('readme.html', readme=open('static/{0}.readme'.format(level)).read())
@@ -111,10 +107,10 @@ randomizers = [locals().get('randomize_level{0}'.format(i), lambda x: x) for i i
 def randomize_level(instance, level):
     return randomizers[level](instance) or "randomized"
 
-@app.route('/test/user<int:instance>/level<int:level>')
-def test(instance, level):
-  content = render_template('test/level{0}.html'.format(level), location=location, user_id=instance, level=level, baseport=instance_baseport(instance))
-  return render_template('test/levels.html', location=location, user_id=instance, level=level, baseport=instance_baseport(instance), content=content)
+@app.route('/user<int:instance>/level<int:level>/')
+def show_level(instance, level):
+  content = render_template('level{0}.html'.format(level), location=location, user_id=instance, level=level, baseport=instance_baseport(instance))
+  return render_template('levels.html', location=location, user_id=instance, level=level, baseport=instance_baseport(instance), content=content)
 
 
 if __name__ == '__main__':
